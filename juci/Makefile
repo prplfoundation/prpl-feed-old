@@ -94,7 +94,7 @@ endef
 #$(eval $(call RegisterAddon,Plugins,juci-cgroups, cgroups Module,+icgroupd))
 $(eval $(call RegisterAddon,Plugins,juci-ddns, DDNS Configuration,+ddns-scripts))
 #$(eval $(call RegisterAddon,Plugins,juci-dect, DECT Module,+dectmngr2))
-$(eval $(call RegisterAddon,Plugins,juci-diagnostics, Simple Diagnostics,+tptest))
+$(eval $(call RegisterAddon,Plugins,juci-diagnostics, Simple Diagnostics))
 $(eval $(call RegisterAddon,Plugins,juci-dnsmasq-dhcp, DHCP/DNSMasq Configuration,+dnsmasq))
 $(eval $(call RegisterAddon,Plugins,juci-dropbear, Dropbear Configuration,+dropbear))
 $(eval $(call RegisterAddon,Plugins,juci-ethernet, Ethernet Core module))

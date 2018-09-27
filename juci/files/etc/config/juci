@@ -18,7 +18,6 @@ config juci_event 'juci_event'
 	list filter network.dnmasq
 	list filter system.kernel
 	list filter system.ntp
-	list filter iptv.mcpd
 
 config widget
 	list name overviewWidget99Clientmode
@@ -81,8 +80,6 @@ config menu
 	option page 'voice-sip-accounts'
 	list acls 'juci-voice-client'
 	list require 'file:/etc/config/voice_client'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'voice/sip-users'
@@ -90,7 +87,6 @@ config menu
 	list acls 'juci-voice-client'
 	option modes 'expert'
 	list require 'file:/etc/config/voice_client'
-	list expose 'admin'
 
 config menu
 	option path 'voice/lines'
@@ -98,8 +94,6 @@ config menu
 	list acls 'juci-voice-client'
 	option modes 'expert'
 	list require 'file:/etc/config/voice_client'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'voice/advanced-settings'
@@ -108,30 +102,24 @@ config menu
 	option redirect 'first'
 	option modes 'expert'
 	list require 'file:/etc/config/voice_client'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'voice/advanced-settings/sip'
 	option page 'voice-advanced-settings-sip'
 	list acls 'juci-voice-client'
 	list require 'file:/etc/config/voice_client'
-	list expose 'admin'
 
 config menu
 	option path 'voice/advanced-settings/lines'
 	option page 'voice-advanced-settings-lines'
 	list acls 'juci-voice-client'
 	list require 'file:/etc/config/voice_client'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'voice/advanced-settings/dialplan'
 	option page 'voice-advanced-settings-dialplan'
 	list acls 'juci-voice-client'
 	list require 'file:/etc/config/voice_client'
-	list expose 'admin'
 
 config menu
 	option path 'voice/number-blocking'
@@ -178,8 +166,6 @@ config menu
 	option page 'network-ethernet-port'
 	list acls 'juci-network-port'
 	list require 'file:/etc/config/ports'
-	list expose 'support'
-	list expose 'admin'
 
 config menu
 	option path 'internet/ethernet/vlan'
@@ -188,30 +174,24 @@ config menu
 	list require 'file:/etc/config/network'
 	list require 'ubus:router.port->status'
 	list require 'ubus:network.device->status'
-	list expose 'admin'
 
 config menu
 	option path 'internet/dsl'
 	option page 'network-dsl'
 	list acls 'juci-network-dsl'
 	list require 'file:/etc/config/dsl'
-	list expose 'admin'
 
 config menu
 	option path 'internet/network'
 	option page 'internet-network'
 	list acls 'juci-network-netifd'
 	list require 'file:/etc/config/network'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'internet/routes'
 	option page 'internet-routes'
 	list acls 'juci-network-netifd'
 	list require 'file:/etc/config/network'
-	list expose 'support'
-	list expose 'admin'
 
 config menu
 	option path 'internet/firewall'
@@ -224,16 +204,11 @@ config menu
 	option page 'internet-firewall-zones'
 	list acls 'juci-firewall-fw3'
 	list require 'file:/etc/config/firewall'
-	list expose 'admin'
-	list expose 'support'
-
 config menu
 	option path 'internet/firewall/rules'
 	option page 'internet-firewall-rules'
 	list acls 'juci-firewall-fw3'
 	list require 'file:/etc/config/firewall'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'internet/firewall/port_mapping'
@@ -260,23 +235,18 @@ config menu
 	option page 'juci-qos'
 	list acls 'juci-qos'
 	list require 'file:/etc/config/qos'
-	list expose 'admin'
 
 config menu
 	option path 'internet/multiwan'
 	option page 'internet-multiwan'
 	list acls 'juci-multiwan'
 	list require 'file:/etc/config/multiwan'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'internet/mwan3'
 	option page 'internet-mwan3'
 	list acls 'juci-mwan3'
 	list require 'file:/etc/config/mwan3'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'internet/services'
@@ -312,16 +282,12 @@ config menu
 	option page 'dhcp-settings'
 	list acls 'juci-dnsmasq-dhcp'
 	list require 'file:/etc/config/dhcp'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'internet/services/snmpd'
 	option page 'snmpd-config'
 	list acls 'juci-snmpd'
 	list require 'file:/etc/config/snmpd'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'internet/services/samba'
@@ -425,121 +391,78 @@ config menu
 	option page 'settings-system-log'
 	list acls 'juci-mod-system'
 	list require 'file:/etc/config/system'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'settings/system/connectivity'
 	option page 'settings-connectivity-test'
 	list acls 'juci-mod-system'
 	list require 'file:/etc/config/system'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'settings/users'
 	option page 'settings-users'
 	list acls 'juci-mod-system'
 	list require 'file:/etc/config/juci'
-	list expose 'admin'
 
 config menu
 	option path 'settings/password'
 	option page 'settings-password'
 	list acls 'juci-mod-system'
 	list require 'file:/etc/config/passwords'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'settings/upgrade'
 	option page 'settings-upgrade'
 	list acls 'juci-sysupgrade'
 	list require 'file:/etc/config/system'
-	list expose 'admin'
 
 config menu
 	option path 'settings/upgrade/options'
 	option page 'settings-upgrade-options'
 	list acls 'juci-sysupgrade'
 	list require 'file:/etc/config/system'
-	list expose 'admin'
 
 config menu
 	option path 'settings/configuration'
 	option page 'settings-configuration'
 	list acls 'juci-mod-system'
 	list require 'file:/etc/config/system'
-	list expose 'admin'
 
 config menu
 	option path 'settings/configuration/settings'
 	option page 'config-backup-settings'
 	list acls 'juci-backup'
 	list require 'file:/etc/config/backup'
-	list expose 'admin'
-
-config menu
-	option path 'settings/provisioning'
-	option page 'settings-provisioning-iup'
-	list acls 'juci-iup'
-	list require 'file:/etc/config/provisioning'
-	list expose 'admin'
 
 config menu
 	option path 'settings/icwmp'
 	option page 'icwmp-config'
 	list acls 'juci-icwmp'
 	list require 'file:/etc/config/cwmp'
-	list expose 'admin'
-
-config menu
-	option path 'settings/ice'
-	option page 'ice-client-configuration'
-	list acls 'juci-ice'
-	list require 'ubus:juci.ice->status'
-	list require 'file:/etc/config/ice'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'settings/management'
 	option page 'settings-management'
 	list acls 'juci-mod-system'
 	list require 'file:/etc/config/system'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'settings/management/owsd'
 	option page 'settings-management-owsd'
 	list acls 'juci-owsd'
 	list require 'file:/etc/config/owsd'
-	list expose 'admin'
-	list expose 'support'
-
-config menu
-	option path 'settings/management/catv'
-	option page 'settings-management-catv'
-	list acls 'juci-catv'
-	list require 'file:/etc/config/catv'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'settings/management/dropbear'
 	option page 'settings-management-dropbear'
 	list acls 'juci-dropbear'
 	list require 'file:/etc/config/dropbear'
-	list expose 'admin'
 
 config menu
 	option path 'settings/management/uhttpd'
 	option page 'page-uhttpd-settings'
 	list acls 'juci-uhttpd'
 	list require 'file:/etc/config/uhttpd'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'settings/hardware'
@@ -565,8 +488,6 @@ config menu
 	option page 'settings-services'
 	list acls 'juci-mod-system'
 	list require 'ubus:service'
-	list expose 'admin'
-	list expose 'support'
 
 config menu
 	option path 'settings/restart'
@@ -649,7 +570,6 @@ config menu
 	option page 'wireless-band-steering-status'
 	list acls 'juci-wireless'
 	list require 'ubus:router.wireless->bsd_sta_info'
-	list expose 'admin'
 
 config menu
 	option path 'status/dsl'
@@ -689,12 +609,6 @@ config menu
 	list require 'ubus:juci.diagnostics'
 
 config menu
-	option path 'status/diagnostics/speedtest'
-	option page 'status-diagnostics-speedtest'
-	list acls 'juci-diagnostics'
-	list require 'ubus:juci.diagnostics'
-
-config menu
 	option path 'status/realtime-graphs'
 	option page 'status-realtime-graphs'
 	list acls 'juci-realtime-graphs'
@@ -712,5 +626,4 @@ config menu
 	option modes 'expert'
 	list require 'ubus:log'
 	list require 'ubus:router.system->logs'
-	list expose 'admin'
-	list expose 'support'
+
