@@ -81,6 +81,7 @@ endef
 define Package/dslmngr/install
 	$(INSTALL_DIR) $(1)/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/dslmngr $(1)/sbin/
+	$(CP) ./files/* $(1)/
 endef
 
 $(eval $(call BuildPackage,libdsl))
