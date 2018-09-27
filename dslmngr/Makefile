@@ -12,7 +12,8 @@ PKG_VERSION:=1.0.0
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_VERSION:=68786fa9c603269f32566c101e62f51191224bd7
-PKG_SOURCE_URL:=https://github.com/prplfoundation/dsl-poc.git
+PKG_SOURCE_URL:=git@github.com:prplfoundation/dsl-poc.git
+#PKG_SOURCE_URL:=https://github.com/prplfoundation/dsl-poc.git
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
