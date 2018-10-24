@@ -1,12 +1,11 @@
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=juci
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://dev.iopsys.eu/iopsys/juci
-PKG_SOURCE_VERSION:=8105a4c02f78901f74719c5cb3af593a7935430c
-PKG_VERSION:=2017-09-25
+PKG_SOURCE_URL:=https://dev.iopsys.eu/iopsys/juci.git
+PKG_SOURCE_VERSION:=38608929ec15828bc99b6cdb60f94ed00b19f177
+PKG_VERSION:=2018-10-19
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_SOURCE_SUBDIR)
@@ -24,7 +23,7 @@ define Package/juci
   CATEGORY:=JUCI
   MENU=1
   TITLE:=JUCI Core Package (select this to select default plugins)
-  DEPENDS:=+libubox +libubus +owsd +rpcd +rpcd-mod-file
+  DEPENDS:=+libubox +libubus +owsd +rpcd +rpcd-mod-file +questd
 endef
 
 define Build/InstallDev 
@@ -88,39 +87,33 @@ define RegisterAddon
 	$(eval $(call BuildPackage,$(2)))
 endef
 
-#$(eval $(call RegisterAddon,Plugins,juci-catv, CATV Module,+catv))
-#$(eval $(call RegisterAddon,Plugins,juci-cgroups, cgroups Module,+icgroupd))
 $(eval $(call RegisterAddon,Plugins,juci-ddns, DDNS Configuration,+ddns-scripts))
-#$(eval $(call RegisterAddon,Plugins,juci-dect, DECT Module,+dectmngr2))
 $(eval $(call RegisterAddon,Plugins,juci-diagnostics, Simple Diagnostics))
 $(eval $(call RegisterAddon,Plugins,juci-dnsmasq-dhcp, DHCP/DNSMasq Configuration,+dnsmasq))
 $(eval $(call RegisterAddon,Plugins,juci-dropbear, Dropbear Configuration,+dropbear))
-$(eval $(call RegisterAddon,Plugins,juci-ethernet, Ethernet Core module))
-#$(eval $(call RegisterAddon,Plugins,juci-event, Event Module,+questd))
+$(eval $(call RegisterAddon,Plugins,juci-event, Event Module,+questd))
 $(eval $(call RegisterAddon,Plugins,juci-firewall-fw3, Firewall Configuration,+firewall))
-#$(eval $(call RegisterAddon,Plugins,juci-icwmp, TR-069 Module,+icwmp))
 $(eval $(call RegisterAddon,Plugins,juci-config-backup, Config Backup Module))
 $(eval $(call RegisterAddon,Plugins,juci-qos, QoS module,+qos-scripts))
-#$(eval $(call RegisterAddon,Plugins,juci-voice-client, Voice Client Module,+voice-client))
 $(eval $(call RegisterAddon,Plugins,juci-minidlna, MiniDLNA Configuration,+minidlna))
-#$(eval $(call RegisterAddon,Plugins,juci-mod-status, Deprecated Status Reporting Module,+questd))
+$(eval $(call RegisterAddon,Plugins,juci-mod-status, Deprecated Status Reporting Module,+questd))
 $(eval $(call RegisterAddon,Plugins,juci-mod-system, System Administration Module))
 $(eval $(call RegisterAddon,Plugins,juci-mwan3, mwan3 Configuration,+mwan3))
 $(eval $(call RegisterAddon,Plugins,juci-network-device, Network device Configuration,+netifd))
 $(eval $(call RegisterAddon,Plugins,juci-network-dsl, DSL Module,+dslmngr))
 $(eval $(call RegisterAddon,Plugins,juci-network-netifd, netifd Module,+netifd))
-#$(eval $(call RegisterAddon,Plugins,juci-network-port, Ethernet Port Configuration,+questd))
-$(eval $(call RegisterAddon,Plugins,juci-omcproxy, OpenWrt IGMP/MLD Proxy Configuration,+omcproxy))
+$(eval $(call RegisterAddon,Plugins,juci-network-port, Ethernet Port Configuration,+questd))
+$(eval $(call RegisterAddon,Plugins,juci-openvpn, OpenVPN configuration,+openvpn))
 $(eval $(call RegisterAddon,Plugins,juci-owsd, OWSD configuration,+owsd))
 $(eval $(call RegisterAddon,Plugins,juci-printer, p910nd Printer Server Configuration,+p910nd))
-#$(eval $(call RegisterAddon,Plugins,juci-realtime-graphs, Realtime Graphs,+questd))
+$(eval $(call RegisterAddon,Plugins,juci-realtime-graphs, Realtime Graphs,+questd))
 $(eval $(call RegisterAddon,Plugins,juci-samba, Samba Configuration,+samba3))
-$(eval $(call RegisterAddon,Plugins,juci-snmpd, SNMP Configuration,+snmpd))
+$(eval $(call RegisterAddon,Plugins,juci-snmpd, SNMP Module, +snmpd))
 $(eval $(call RegisterAddon,Plugins,juci-sysupgrade, Sysupgrade Firmware Upgrade))
 $(eval $(call RegisterAddon,Plugins,juci-upnp, UPnP Configuration Module,+miniupnpd))
-#$(eval $(call RegisterAddon,Plugins,juci-usb, USB Module,+questd))
-#$(eval $(call RegisterAddon,Plugins,juci-wireless, Wireless Module,+questd))
-#$(eval $(call RegisterAddon,Themes,juci-theme-prpl))
+$(eval $(call RegisterAddon,Plugins,juci-usb, USB Module,+questd))
+$(eval $(call RegisterAddon,Plugins,juci-wireless, Wireless Module,+questd))
+$(eval $(call RegisterAddon,Themes,juci-theme-prpl))
 
 ####### dynamically publish themes as packages #######
 $(foreach th,$(wildcard $(TOPDIR)/themes/*),$(eval $(call RegisterAddon,Themes,$(notdir $(th)))))
