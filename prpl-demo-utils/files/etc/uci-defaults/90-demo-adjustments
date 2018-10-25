@@ -8,6 +8,8 @@ uci -q commit network
 
 uci -q set wireless.status=wifi-status
 uci -q set wireless.status.wlan=1
+uci -q set wireless.wlan0.band=b
+uci -q set wireless.wlan2.band=a
 uci -q commit wireless
 
 uci -q set firewall.settings=settings
