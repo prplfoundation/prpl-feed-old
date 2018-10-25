@@ -1,0 +1,4 @@
+#!/bin/sh
+
+/sbin/uci -c /lib/db/config $1 $2 $3
+
