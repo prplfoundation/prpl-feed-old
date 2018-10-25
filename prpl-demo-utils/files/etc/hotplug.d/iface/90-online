@@ -1,0 +1,10 @@
+[ "$INTERFACE" == "wan" ] || exit
+
+if [ "$ACTION" == "ifup" ]; then
+	echo "{ \"online\" : true }" > /tmp/internet_connection_status
+	ubus send internet '{"status" : "online"}'
+elif [ "$ACTION" == "down" ]; then
+	echo "{ \"online\" : false }" > /tmp/internet_connection_status
+	ubus send internet '{"status" : "offline"}'
+fi
+
