@@ -1,0 +1,20 @@
+#!/bin/sh
+
+mcp_name=$(uci -q get mcproxy.@instance[0].name)
+
+if [ "$mcp_name" != "wan2lan" ]; then
+	echo > /etc/config/mcproxy
+
+	uci -q set mcproxy.mcproxy='mcproxy'
+	uci -q set mcproxy.mcproxy.disabled='0'
+	uci -q set mcproxy.mcproxy.respawn='1'
+	uci -q set mcproxy.mcproxy.protocol='IGMPv2'
+
+	uci -q add mcproxy instance >> /dev/null
+	uci -q set mcproxy.@instance[-1].name='wan2lan'
+	uci -q set mcproxy.@instance[0].upstream='ptm0.11'
+	uci -q set mcproxy.@instance[0].downstream='br-lan'
+	uci -q set mcproxy.@instance[0].disabled='0'
+
+	uci -q commit mcproxy
+fi
