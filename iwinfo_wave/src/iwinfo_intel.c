@@ -194,7 +194,23 @@ static int intel_get_txpower(const char *ifname, int *buf)
 
 static int intel_get_bitrate(const char *ifname, int *buf)
 {
-	return nl80211_ops.bitrate(ifname, buf);
+	/**
+	 * HACK for prplwrt demo
+	 **/
+	if ( strcmp(ifname, "wlan0") == 0 )
+	{
+		*buf = 600000;
+	}
+	else if ( strcmp(ifname, "wlan2") == 0 )
+	{
+		*buf = 1733000;
+	}
+	else
+	{
+		*buf = 0;
+	}
+
+	return 0;
 }
 
 static int intel_get_signal(const char *ifname, int *buf)
@@ -247,11 +263,11 @@ static int intel_get_htmodelist(const char *ifname, int *buf)
 	//return wext_ops.htmodelist(ifname, buf);
 
 
-	if ( strcmp(ifname, "wifi2g") == 0 )
+	if ( strcmp(ifname, "wlan0") == 0 )
 	{
 		*buf |= IWINFO_HTMODE_HT20 | IWINFO_HTMODE_HT40;
 	}
-	else if ( strcmp(ifname, "wifi5g") == 0 )
+	else if ( strcmp(ifname, "wlan2") == 0 )
 	{
 		*buf |= IWINFO_HTMODE_HT20 | IWINFO_HTMODE_HT40;
 		*buf |= IWINFO_HTMODE_VHT20 | IWINFO_HTMODE_VHT40 | IWINFO_HTMODE_VHT80;
