@@ -1,3 +1,0 @@
-uci -q set dsl.line.type=intelcpe
-uci -q commit dsl
-
