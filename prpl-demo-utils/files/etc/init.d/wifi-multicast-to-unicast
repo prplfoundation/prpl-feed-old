@@ -1,0 +1,25 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006-2011 OpenWrt.org
+
+START=92
+
+boot() {
+	##
+	# enable multicast to unicast in bridge for all
+	# wifi interfaces 
+	##
+	DEVICES=$(ls /sys/class/net/*/wireless | sed 's/\/sys\/class\/net\///g' | sed 's/\/wireless://g')
+	for DEV in $DEVICES; do
+		if [ -e "/sys/class/net/${DEV}/wireless" ]; then
+			echo "got DEV=( $DEV )"
+			DIR=$(echo "/sys/class/net/${DEV}/brport/multicast_to_unicast")
+			if [ -e $DIR ]; then
+				VAL=$(cat $DIR)
+				if [ $VAL -ne 1 ]; then
+					echo 1 > $DIR
+					echo "enabling Linux bridge multicast to unicast for wireless interface $DEV" > /dev/kmsg
+				fi
+			fi
+		fi
+	done
+}
