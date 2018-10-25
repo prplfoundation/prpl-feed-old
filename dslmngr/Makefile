@@ -11,7 +11,7 @@ PKG_NAME:=dslmngr
 PKG_VERSION:=1.0.0
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=68786fa9c603269f32566c101e62f51191224bd7
+PKG_SOURCE_VERSION:=d4d601d23530d282847569199f53542428103fab
 PKG_SOURCE_URL:=git@github.com:prplfoundation/dsl-poc.git
 #PKG_SOURCE_URL:=https://github.com/prplfoundation/dsl-poc.git
 
@@ -47,7 +47,7 @@ endef
 #XDSL_BACKENDS := \
 #	$(if $(CONFIG_TARGET_xrx500),intelcpe)
 
-ifeq ($(CONFIG_TARGET_xrx500),y)
+ifeq ($(CONFIG_TARGET_intel_mips_xrx500),y)
   LIBDSL_CFLAGS+=-DINTELCPE
 endif
 
