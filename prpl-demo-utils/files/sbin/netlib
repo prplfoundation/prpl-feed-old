@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# arg1: port name, ex: eth0
+interfacename() {
+	local PORT_ORDER=$(db get hw.board.ethernetPortOrder)
+	local PORT_NAMES=$(db get hw.board.ethernetPortNames)
+	local cnt=1
+	local idx=1
+
+	# get index of interface name
+	for i in $PORT_ORDER; do
+		if [ "$i" == "$1" ]; then
+			break;
+		fi
+		idx=$((idx+1))
+	done
+
+	# get port name from index
+	for i in $PORT_NAMES; do
+		if [ "$cnt" == "$idx" ]; then
+			echo $i
+			break;
+		fi
+		cnt=$((cnt+1))
+	done
+
+	# for wifi use default
+	uci show wireless | grep ifname | grep -wq "$1" && echo "WLAN"
+}
+
+interfacename $2
