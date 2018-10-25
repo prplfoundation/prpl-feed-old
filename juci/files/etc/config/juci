@@ -33,10 +33,10 @@ config widget
 	list name overviewStatusWidget00WiFi
 	option link "#!/wireless-status"
 
-config widget
-	list name overviewWidget20USB
-	list name overviewStatusWidget20USB
-	option link "#!/status-usb"
+#config widget
+#	list name overviewWidget20USB
+#	list name overviewStatusWidget20USB
+#	option link "#!/status-usb"
 
 config menu
 	option path 'netmode-wizard'
