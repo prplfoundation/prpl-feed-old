@@ -28,3 +28,6 @@ uci -q set firewall.@rule[-1].proto='udp'
 uci -q set firewall.@rule[-1].family='ipv4'
 uci -q set firewall.@rule[-1].target='ACCEPT'
 uci -q commit firewall
+
+uci -q set system.@system[0].hostname=prplWrt
+uci -q commit system
