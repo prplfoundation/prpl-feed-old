@@ -23,7 +23,7 @@ define Package/juci
   CATEGORY:=JUCI
   MENU=1
   TITLE:=JUCI Core Package (select this to select default plugins)
-  DEPENDS:=+libubox +libubus +owsd +rpcd +rpcd-mod-file +questd
+  DEPENDS:=+libubox +libubus +owsd +rpcd +rpcd-mod-file +prpl-demo-utils
 endef
 
 define Build/InstallDev 
