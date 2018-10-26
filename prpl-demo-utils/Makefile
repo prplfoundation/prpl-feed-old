@@ -10,7 +10,7 @@ define Package/prpl-demo-utils
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=Prpl Demo Tools
-  DEPENDS:=+iwinfo_wave +rpcd +ubus +uci
+  DEPENDS:=+iwinfo_wave +rpcd +ubus +libuci +libubox +libpthread +libopenssl
 endef
 
 define Package/prpl-demo-utils/description
