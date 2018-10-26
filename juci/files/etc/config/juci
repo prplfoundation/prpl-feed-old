@@ -286,36 +286,6 @@ config menu
 	list require 'file:/etc/config/juci'
 
 config menu
-	option path 'settings/password'
-	option page 'settings-password'
-	list acls 'juci-mod-system'
-	list require 'file:/etc/config/passwords'
-
-config menu
-	option path 'settings/upgrade'
-	option page 'settings-upgrade'
-	list acls 'juci-sysupgrade'
-	list require 'file:/etc/config/system'
-
-config menu
-	option path 'settings/upgrade/options'
-	option page 'settings-upgrade-options'
-	list acls 'juci-sysupgrade'
-	list require 'file:/etc/config/system'
-
-config menu
-	option path 'settings/configuration'
-	option page 'settings-configuration'
-	list acls 'juci-mod-system'
-	list require 'file:/etc/config/system'
-
-config menu
-	option path 'settings/configuration/settings'
-	option page 'config-backup-settings'
-	list acls 'juci-backup'
-	list require 'file:/etc/config/backup'
-
-config menu
 	option path 'settings/management'
 	option page 'settings-management'
 	list acls 'juci-mod-system'
