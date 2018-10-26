@@ -1,9 +1,12 @@
 uci -q set dsl.line.type=intelcpe
 uci -q commit dsl
 
+uci -q set network.wan.ifname="ptm0.10"
+uci -q delete network.lan_dev
+uci -q set network.wan.macaddr=$(uci -q get network.wan_dev.macaddr)
+uci -q delete network.wan_dev
 uci -q set network.lan.is_lan=1
-uci -q set network.lan_dev.vid=1
-uci -q set network.wan_dev.vid=2
+uci -q set network.wan6.ifname="@wan"
 uci -q commit network
 
 uci -q set wireless.status=wifi-status
