@@ -1,0 +1,10 @@
+#!/bin/sh
+
+while true; do
+	sleep 10
+
+	grep -rq "br-lan" /proc/net/arp && {
+		ubus -t 5 call router.network ports '{"network":"lan"}' | grep -q ipaddr || killall -9 questd
+	}
+done
+

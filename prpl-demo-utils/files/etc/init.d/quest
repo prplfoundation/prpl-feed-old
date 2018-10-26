@@ -17,11 +17,13 @@ start_service() {
 	procd_set_param respawn
 	procd_close_instance
 
-	/sbin/qmonitor &
+	procd_open_instance
+	procd_set_param command "/sbin/qmonitor"
+	procd_close_instance
 }
 
 stop() {
-	killall -9 qmonitor
+	echo ""
 }
 
 service_triggers()
