@@ -1,0 +1,92 @@
+#!/bin/bash
+
+# get bridge groups without IPv6 like
+# dev br-lan port eth0.1 grp 224.0.18.107 temp
+groups=( $(bridge mdb show 2>>/dev/null | sort | grep -v "::") )
+
+#{
+#        "clients": [
+#                {
+#                        "device": "br-lan",
+#                        "online": true,
+#                        "ipaddr": "192.168.1.136",
+#                        "macaddr": "e8:ea:6a:0c:37:5c"
+#                },
+#                {
+#                        "online": true,
+#                        "ipaddr": "192.168.1.180",
+#                        "hostname": "thayes-Latitude-E5540",
+#                        "device": "br-lan",
+#                        "macaddr": "34:e6:d7:1d:f6:f0",
+#                        "leasetime": "1469094499"
+#                },
+#                {
+#                        "device": "wan",
+#                        "online": true,
+#                        "ipaddr": "10.0.3.1",
+#                        "macaddr": "cc:d5:39:52:9a:59"
+#                },
+#                {
+#                        "online": true,
+#                        "ipaddr": "192.168.1.175",
+#                        "hostname": "thayes-Latitude-D630",
+#                        "device": "br-lan",
+#                        "macaddr": "00:26:b9:e5:90:5b",
+#                        "leasetime": "1469096614"
+#                }
+#        ]
+#}
+
+INDENT="    "
+
+# 7 strings per entry
+cnt=${#groups[@]}
+idx=0
+
+devcnt=0
+portcnt=0
+groupcnt=0
+comma=0
+
+BRIDX=1
+DEVIDX=3
+GROUPIDX=5
+
+# get the first dev and port
+BR=""
+DEV=""
+
+FILE="/tmp/igmp.json"
+
+echo "{ " | tee $FILE
+echo "${INDENT}\"joins\": [ " | tee -a $FILE
+
+while [ "${groups[$idx]}" != "" ]; do
+
+        BR=${groups[$idx+$BRIDX]}
+        DEV=${groups[$idx+$DEVIDX]}
+        GROUP=${groups[$idx+$GROUPIDX]}
+
+        if [ $comma -eq 1 ]; then
+                echo "${INDENT} }, " | tee -a $FILE
+        fi
+
+        echo "${INDENT} { " | tee -a $FILE
+        echo "${INDENT}${INDENT}  \"bridge\":\"${BR}\"," | tee -a $FILE
+        echo "${INDENT}${INDENT}  \"device\":\"${DEV}\"," | tee -a $FILE
+        echo "${INDENT}${INDENT}  \"group\":\"${GROUP}\"" | tee -a $FILE
+    
+        let groupcnt=groupcnt+1
+        let idx=idx+7
+        comma=1
+done
+
+
+        if [ $comma -eq 1 ]; then
+                echo "${INDENT} } " | tee -a $FILE
+        fi
+
+# finish the JSON
+echo "${INDENT}] "
+echo "} " | tee -a $FILE
+echo | tee -a $FILE
