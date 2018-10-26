@@ -17,5 +17,14 @@ uci -q commit wireless
 
 uci -q set firewall.settings=settings
 uci -q set firewall.settings.disabled=0
-uci -q set firewall
+uci -q commit firewall
 
+uci -q add firewall rule
+uci -q set firewall.@rule[-1].name='allow-video'
+uci -q set firewall.@rule[-1].src='wan'
+uci -q set firewall.@rule[-1].dest='lan'
+uci -q set firewall.@rule[-1].dest_ip='224.0.0.0/4'
+uci -q set firewall.@rule[-1].proto='udp'
+uci -q set firewall.@rule[-1].family='ipv4'
+uci -q set firewall.@rule[-1].target='ACCEPT'
+uci -q commit firewall
