@@ -7,6 +7,16 @@ esac
 [ "$ACTION" = ifup -o "$ACTION" = ifupdate ] || exit 0
 [ "$ACTION" = ifupdate -a -z "$IFUPDATE_ADDRESSES" -a -z "$IFUPDATE_DATA" ] && exit 0
 
+WAN_INTF=$(uci -q get network.wan.ifname)
+uci set mcproxy.@instance[0].upstream=$WAN_INTF
+uci commit mcproxy
+
+# restart mcproxy to pickup any interface changes
 /etc/init.d/mcproxy restart
+
+# ensure bridge is set to snoop and query
+echo 1 > /sys/devices/virtual/net/br-lan/bridge/multicast_snooping
+echo 1 > /sys/devices/virtual/net/br-lan/bridge/multicast_querier
+echo 1 > /sys/devices/virtual/net/br-lan/bridge/multicast_query_use_ifaddr
 
 logger -t mcproxy "Reloading mcproxy due to $ACTION of $INTERFACE ($DEVICE)"
