@@ -25,7 +25,7 @@ config widget
 	list name overviewWidget10Network
 	list name overviewStatusWidget10Network
 	list name overviewSliderWidget10Network
-	list name overviewStatusWidget01Ethernet
+#	list name overviewStatusWidget01Ethernet
 	option link "#!/internet-ethernet"
 
 config widget
@@ -58,12 +58,13 @@ config menu
 	list acls 'juci-network-device'
 	list require 'ubus:network.device->status'
 	list require 'ubus:router.port->status'
+	option redirect 'first'
 
-config menu
-	option path 'internet/ethernet/phy'
-	option page 'network-ethernet-port'
-	list acls 'juci-network-port'
-	list require 'file:/etc/config/ports'
+#config menu
+#	option path 'internet/ethernet/phy'
+#	option page 'network-ethernet-port'
+#	list acls 'juci-network-port'
+#	list require 'file:/etc/config/ports'
 
 config menu
 	option path 'internet/ethernet/vlan'
@@ -79,11 +80,11 @@ config menu
 	list acls 'juci-network-dsl'
 	list require 'file:/etc/config/dsl'
 
-config menu
-	option path 'internet/network'
-	option page 'internet-network'
-	list acls 'juci-network-netifd'
-	list require 'file:/etc/config/network'
+#config menu
+#	option path 'internet/network'
+#	option page 'internet-network'
+#	list acls 'juci-network-netifd'
+#	list require 'file:/etc/config/network'
 
 config menu
 	option path 'internet/routes'
@@ -285,36 +286,6 @@ config menu
 	list require 'file:/etc/config/juci'
 
 config menu
-	option path 'settings/password'
-	option page 'settings-password'
-	list acls 'juci-mod-system'
-	list require 'file:/etc/config/passwords'
-
-config menu
-	option path 'settings/upgrade'
-	option page 'settings-upgrade'
-	list acls 'juci-sysupgrade'
-	list require 'file:/etc/config/system'
-
-config menu
-	option path 'settings/upgrade/options'
-	option page 'settings-upgrade-options'
-	list acls 'juci-sysupgrade'
-	list require 'file:/etc/config/system'
-
-config menu
-	option path 'settings/configuration'
-	option page 'settings-configuration'
-	list acls 'juci-mod-system'
-	list require 'file:/etc/config/system'
-
-config menu
-	option path 'settings/configuration/settings'
-	option page 'config-backup-settings'
-	list acls 'juci-backup'
-	list require 'file:/etc/config/backup'
-
-config menu
 	option path 'settings/management'
 	option page 'settings-management'
 	list acls 'juci-mod-system'
@@ -420,11 +391,11 @@ config menu
 	list acls 'juci-diagnostics'
 	list require 'ubus:juci.diagnostics'
 
-config menu
-	option path 'status/realtime-graphs'
-	option page 'status-realtime-graphs'
-	list acls 'juci-realtime-graphs'
-	list require 'ubus:router.graph'
+#config menu
+#	option path 'status/realtime-graphs'
+#	option page 'status-realtime-graphs'
+#	list acls 'juci-realtime-graphs'
+#	list require 'ubus:router.graph'
 
 config menu
 	option path 'status/events'

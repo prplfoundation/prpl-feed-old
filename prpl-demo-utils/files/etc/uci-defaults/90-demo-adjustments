@@ -31,3 +31,19 @@ uci -q commit firewall
 
 uci -q set system.@system[0].hostname=prplWrt
 uci -q commit system
+
+grep -rq "^user:" /etc/passwd || {
+	adduser -D -H -s /bin/false user
+	(echo user; sleep 1; echo user) | passwd user >/dev/null 2>&1
+
+	uci -q set rpcd.@login[-1].username=user
+	uci -q set rpcd.@login[-1].password="\$p\$user"
+	uci -q add_list rpcd.@login[-1].read="*"
+	uci -q add_list rpcd.@login[-1].write="*"
+	uci -q commit rpcd
+}
+
+db -q set hw.board.kernelVersion="$(uname -a | awk '{print$3}')"
+db -q set hw.board.firmwareVersion="$(grep '_RELEASE' /etc/os-release  | awk -F'[=,\"]' '{print$3}' | tr ' ' '_')"
+db -q commit
+
