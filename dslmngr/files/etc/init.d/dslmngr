@@ -13,18 +13,18 @@ start_service() {
 	procd_close_instance
 }
 
-service_running() {
-        ubus -t 5 wait_for xdsl
-        ubus -t 5 call xdsl start
-}
+#service_running() {
+#        ubus -t 5 wait_for dsl
+#        ubus -t 5 call dsl start
+#}
 
 service_triggers()
 {
 	procd_add_reload_trigger dsl
 }
 
-reload_service() {
-	ubus -t 5 call xdsl stop
-	ubus -t 5 call xdsl start
-}
+#reload_service() {
+#	ubus -t 5 call dsl stop
+#	ubus -t 5 call dsl start
+#}
 

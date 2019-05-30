@@ -1,5 +1,4 @@
 config dsl-line line
-#	option type <dsltype>
 	list mode gdmt
 	list mode glite
 	list mode t1413
