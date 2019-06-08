@@ -400,7 +400,8 @@ config menu
 	option path 'status/dsl'
 	option page 'network-dsl-status'
 	list acls 'juci-network-dsl'
-	list require 'ubus:router.dsl->status'
+	list require 'ubus:dsl->status'
+	list require 'ubus:dsl->stats'
 
 config menu
 	option path 'status/tv'
