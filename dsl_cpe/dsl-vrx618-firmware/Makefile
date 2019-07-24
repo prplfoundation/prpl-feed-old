@@ -21,7 +21,6 @@ PKG_SOURCE_URL:=http://localhost
 FIRMWARE_DIR=lib/firmware/09AA/
 
 include $(INCLUDE_DIR)/package.mk
--include $(INCLUDE_DIR)/package-version-override.mk
 
 define Package/$(PKG_NAME)
   CATEGORY:=Lantiq

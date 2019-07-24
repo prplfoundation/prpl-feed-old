@@ -12,8 +12,6 @@ PKG_NAME:=dsl-gfast-api-vrx618
 PKG_RELEASE:=1
 PKG_BASE_NAME:=lib_gfast_api
 PKG_VERSION:=5.0.4
--include $(INCLUDE_DIR)/package-version-override.mk
-
 PKG_SOURCE:=$(PKG_BASE_NAME)_vrx618-$(PKG_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_BASE_NAME)-$(PKG_VERSION)_vrx618/lib_dsl_api-$(PKG_VERSION)
 PKG_SOURCE_URL:=http://localhost

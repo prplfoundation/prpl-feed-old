@@ -8,7 +8,6 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://mts-chd.intel.com/~wlnsw/dist/
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/package-version-override.mk
 
 define Package/$(PKG_NAME)
   SECTION:=firmware  

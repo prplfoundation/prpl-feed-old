@@ -16,7 +16,6 @@ PATCH_DIR:=./patches-$(PKG_VERSION)
 PKG_FIXUP:=libtool
 PKG_INSTALL:=1
 
--include $(INCLUDE_DIR)/package-version-override.mk
 include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)

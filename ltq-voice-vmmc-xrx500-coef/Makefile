@@ -12,11 +12,6 @@ PKG_NAME:=ltq-voice-vmmc-xrx500-coef
 PKG_VERSION:=3.0.0
 PKG_MD5SUM:=f47c46ce439b7a3c9747b452c23647fa
 PKG_BASE_NAME:=coef_voip_xrx500
-
-# IMPORTANT - include the version-override here after PKG_VERSION definition
-include $(INCLUDE_DIR)/package-version-override.mk
-# IMPORTANT - ... and before using PKG_VERSION below
-
 PKG_SOURCE:=$(PKG_BASE_NAME)-$(PKG_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_BASE_NAME)-$(PKG_VERSION)
 PKG_UNPACK:=gzip -dc $(DL_DIR)/$(PKG_SOURCE) | $(TAR) -C $(PKG_BUILD_DIR) $(TAR_OPTIONS)

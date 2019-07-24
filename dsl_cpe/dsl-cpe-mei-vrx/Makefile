@@ -25,7 +25,6 @@ DSL_FW_DIR=/lib/firmware
 PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
--include $(INCLUDE_DIR)/package-version-override.mk
 
 # Get config values from general image config or other packages in dependency list
 # By default this is the reference place for definition of the following values

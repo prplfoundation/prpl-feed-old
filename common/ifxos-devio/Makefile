@@ -19,8 +19,6 @@ PKG_MD5SUM:=2c40d61533696b279cbaa9794bcf3559
 PKG_FIXUP:=libtool
 PKG_INSTALL:=1
 
-include $(INCLUDE_DIR)/package-version-override.mk
-
 # re-define PATCH_DIR to get version-specific patches
 PATCH_DIR:=./patches-$(PKG_VERSION)
 

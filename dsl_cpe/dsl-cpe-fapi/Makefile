@@ -22,15 +22,7 @@ PKG_FIXUP:=autoreconf
 PKG_FIXUP:=libtool
 PKG_INSTALL:=1
 
--include $(INCLUDE_DIR)/package-version-override.mk
 include $(INCLUDE_DIR)/package.mk
-
-ifeq ($(findstring intel,$(VENDOR_PATH)),intel)
-#UGW8 onwards
-$(call include_mk, ugw-loglevel.mk)
-else
-include $(INCLUDE_DIR)/ugw-loglevel.mk
-endif
 
 # Get config values from general image config or other packages in dependency list
 # Definition of these values will be overtaken from package 'dsl-cpe-mei-vrx'

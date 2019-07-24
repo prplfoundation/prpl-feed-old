@@ -9,7 +9,6 @@ PKG_SOURCE_URL:=https://mts-chd.intel.com/~wlnsw/dist/
 #PKG_SOURCE_URL:=http://localhost
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/package-version-override.mk
 
 define Package/$(PKG_NAME)
   SECTION:=firmware  

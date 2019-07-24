@@ -18,7 +18,6 @@ PKG_SOURCE_URL:=http://localhost
 #PKG_MD5SUM:=
 PKG_BIN_DIR:=opt/lantiq/bin
 
-include $(INCLUDE_DIR)/package-version-override.mk
 include $(INCLUDE_DIR)/package.mk
 
 PKG_BUILD_DEPENDS:=ifxos

@@ -12,11 +12,6 @@ PKG_NAME:=ltq-voice-vmmc-xrx500
 PKG_VERSION:=1.24.0.0
 PKG_MD5SUM:=3101d368cf511401b9cbb829641e2d0d
 PKG_RELEASE:=1
-
-# IMPORTANT - include the version-override here after PKG_VERSION definition
-include $(INCLUDE_DIR)/package-version-override.mk
-# IMPORTANT - ... and before using PKG_VERSION below
-
 PKG_SOURCE:=drv_vmmc_xrx500-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://localhost
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/drv_vmmc_xrx500-$(PKG_VERSION)

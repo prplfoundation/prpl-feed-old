@@ -18,7 +18,6 @@ PKG_MAINTAINER:=Intel
 PKG_LICENSE:=Intel
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/package-version-override.mk
 $(call include_mk, ugw-loglevel.mk)
 
 

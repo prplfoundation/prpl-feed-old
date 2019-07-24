@@ -1,10 +1,3 @@
-#
-# Copyright (C) 2017 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
@@ -21,14 +14,6 @@ PKG_FIXUP:=libtool
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
--include $(INCLUDE_DIR)/package-version-override.mk
-
-ifeq ($(findstring intel,$(VENDOR_PATH)),intel)
-#UGW8 onwards
-$(call include_mk, ugw-loglevel.mk)
-else
-include $(INCLUDE_DIR)/ugw-loglevel.mk
-endif
 
 define Package/$(PKG_NAME)
   SECTION:=utils

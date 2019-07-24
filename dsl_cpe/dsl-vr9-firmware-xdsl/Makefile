@@ -20,7 +20,6 @@ PKG_UNPACK:=gzip -dc $(DL_DIR)/$(PKG_SOURCE) | $(TAR) -C $(PKG_BUILD_DIR) $(TAR_
 PKG_SOURCE_URL:=http://localhost
 PKG_TARGET_BASE_NAME:=xcpe_hw.bin
 
--include $(INCLUDE_DIR)/package-version-override.mk
 include $(INCLUDE_DIR)/package.mk
 
 FIRMWARE_DIR:=/lib/firmware/$(LINUX_VERSION)

@@ -12,11 +12,6 @@ PKG_NAME:=ltq-voice-tapi
 PKG_VERSION:=4.18.1.0
 PKG_MD5SUM:=0a8de1ebdb2b1c771971ce08bf415052
 PKG_RELEASE:=1
-
-# IMPORTANT - include the version-override here after PKG_VERSION definition
-include $(INCLUDE_DIR)/package-version-override.mk
-# IMPORTANT - ... and before using PKG_VERSION below
-
 PKG_BASE_NAME:=drv_tapi
 PKG_SOURCE:=$(PKG_BASE_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://localhost

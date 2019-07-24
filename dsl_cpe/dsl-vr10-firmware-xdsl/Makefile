@@ -22,7 +22,6 @@ PKG_TARGET_BASE_NAME:=xcpe_hw.bin
 
 FIRMWARE_DIR:=/lib/firmware
 
--include $(INCLUDE_DIR)/package-version-override.mk
 include $(INCLUDE_DIR)/package.mk
 
 ifeq ($(DUMP),)

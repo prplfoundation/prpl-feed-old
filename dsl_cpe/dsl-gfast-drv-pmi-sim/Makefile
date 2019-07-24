@@ -21,7 +21,6 @@ PKG_BUILD_DEPENDS:=ifxos dsl-gfast-fw-sim
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
 
--include $(INCLUDE_DIR)/package-version-override.mk
 include $(INCLUDE_DIR)/package.mk
 
 ifeq ($(DUMP),)

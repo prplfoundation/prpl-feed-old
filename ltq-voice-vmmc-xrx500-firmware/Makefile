@@ -13,10 +13,6 @@ PKG_VERSION:=1.2.10.10.0
 PKG_MD5SUM:=21eb3e7155bdcd2dfaa18a5479fdea31
 PKG_BASE_NAME:=fw_voip_xrx500
 
-# IMPORTANT - include the version-override here after PKG_VERSION definition
-include $(INCLUDE_DIR)/package-version-override.mk
-# IMPORTANT - ... and before using PKG_VERSION below
-
 PKG_SOURCE:=$(PKG_BASE_NAME)-$(PKG_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_BASE_NAME)-$(PKG_VERSION)
 PKG_RELEASE:=1

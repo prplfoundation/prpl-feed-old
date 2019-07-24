@@ -27,7 +27,6 @@ endif
 PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
--include $(INCLUDE_DIR)/package-version-override.mk
 
 #get firmware relase step
 ifneq ($(CONFIG_UBOOT_CONFIG_FIRMWARE_IN_ROOTFS)$(CONFIG_dsl-cpe-mei-vrx_DEVICE_VR10_320),)

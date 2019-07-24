@@ -21,7 +21,6 @@ PKG_BUILD_DEPENDS:=ifxos lib-dti dsl-gfast-drv-pmi
 PKG_FIXUP:=libtool
 PKG_INSTALL:=1
 
--include $(INCLUDE_DIR)/package-version-override.mk
 include $(INCLUDE_DIR)/package.mk
 
 ifeq ($(DUMP),)

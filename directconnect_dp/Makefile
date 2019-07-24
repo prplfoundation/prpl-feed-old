@@ -22,7 +22,6 @@ PKG_SOURCE_MIRROR:=1
 PKG_MIRROR:=0
 PKG_DEFAULT_CUSTOM_SOURCE_DIR:=/dc_dp_drv/
 
-include $(INCLUDE_DIR)/package-version-override.mk
 include $(INCLUDE_DIR)/package.mk
 
 define KernelPackage/$(PKG_NAME)

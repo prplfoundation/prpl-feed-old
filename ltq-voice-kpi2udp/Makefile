@@ -12,11 +12,6 @@ PKG_NAME:=ltq-voice-kpi2udp
 PKG_VERSION:=3.1.0.0
 PKG_MD5SUM:=e69fa082140bcfd075e6e9451141dbd4
 PKG_RELEASE:=1
-
-# IMPORTANT - include the version-override here after PKG_VERSION definition
-include $(INCLUDE_DIR)/package-version-override.mk
-# IMPORTANT - ... and before using PKG_VERSION below
-
 PKG_SOURCE:=drv_kpi2udp-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://localhost
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/drv_kpi2udp-$(PKG_VERSION)

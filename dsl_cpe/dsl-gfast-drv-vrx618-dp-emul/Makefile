@@ -22,7 +22,6 @@ PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
--include $(INCLUDE_DIR)/package-version-override.mk
 
 ifeq ($(DUMP),)
 	STAMP_CONFIGURED:=$(strip $(STAMP_CONFIGURED))_$(shell $(SH_FUNC) grep '^CONFIG_VRX618_DP_EMUL_' $(TOPDIR)/.config | md5s)

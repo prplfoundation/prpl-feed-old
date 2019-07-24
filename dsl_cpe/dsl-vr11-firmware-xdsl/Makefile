@@ -26,7 +26,6 @@ PKG_CONFIG_DEPENDS:=CONFIG_UBOOT_CONFIG_FIRMWARE_IN_ROOTFS \
 FIRMWARE_DIR:=/lib/firmware
 FW_IN_ROOTFS:=1
 
--include $(INCLUDE_DIR)/package-version-override.mk
 include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)

@@ -12,11 +12,6 @@ PKG_NAME:=ltq-voice-sdd-mbx
 PKG_VERSION:=1.4.0.0
 PKG_MD5SUM:=e85a7a9f7ef51c5fc9b5f21bc967c0bf
 PKG_RELEASE:=1
-
-# IMPORTANT - include the version-override here after PKG_VERSION definition
-include $(INCLUDE_DIR)/package-version-override.mk
-# IMPORTANT - ... and before using PKG_VERSION below
-
 PKG_BASE_NAME:=drv_sdd_mbx
 PKG_SOURCE:=$(PKG_BASE_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://localhost

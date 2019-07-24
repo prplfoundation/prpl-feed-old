@@ -10,8 +10,6 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ifx-vos
 PKG_VERSION:=0.0.9
-include $(INCLUDE_DIR)/package-version-override.mk
-
 PKG_BASE_NAME:=vos-library
 PKG_SOURCE:=$(PKG_BASE_NAME)-$(PKG_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_BASE_NAME)-$(PKG_VERSION)

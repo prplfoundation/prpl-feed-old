@@ -14,11 +14,6 @@ PKG_MD5SUM:=e3628ecf25277aa429d96648c1857c49
 PKG_RELEASE:=1
 
 TAPI_LIB_NLT_NAME:=lib_tapi_nlt_cpe
-
-# IMPORTANT - include the version-override here after PKG_VERSION definition
-include $(INCLUDE_DIR)/package-version-override.mk
-# IMPORTANT - ... and before using PKG_VERSION below
-
 PKG_SOURCE:=$(TAPI_LIB_NLT_NAME)-$(PKG_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(TAPI_LIB_NLT_NAME)-$(PKG_VERSION)
 

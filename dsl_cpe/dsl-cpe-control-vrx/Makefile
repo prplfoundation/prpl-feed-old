@@ -27,9 +27,6 @@ endif
 PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
--include $(INCLUDE_DIR)/package-version-override.mk
-#include $(INCLUDE_DIR)/ugw-loglevel.mk
-$(call include_mk, ugw-loglevel.mk)
 
 # Get config values from general image config or other packages in dependency list
 # Definition of these values will be overtaken from package 'dsl-cpe-mei-vrx'

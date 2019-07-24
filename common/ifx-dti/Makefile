@@ -23,7 +23,6 @@ PKG_BUILD_DEPENDS:=lib_ifxos \
 	PACKAGE_ifx-dsl-vinax2-emul:ifx-dsl-vinax2-emul \
 	PACKAGE_ifx-dsl-geminaxd:ifx-dsl-geminaxd
 
-include $(INCLUDE_DIR)/package-version-override.mk
 include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)

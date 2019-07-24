@@ -23,7 +23,6 @@ DSL_BIN_DIR=/$(VENDOR_PATH)/bin
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
--include $(INCLUDE_DIR)/package-version-override.mk
 include $(INCLUDE_DIR)/package.mk
 
 # Get config values from general image config or other packages in dependency list

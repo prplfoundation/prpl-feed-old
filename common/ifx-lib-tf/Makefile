@@ -10,8 +10,6 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ifx-lib-tf
 PKG_VERSION:=2.1.3
-include $(INCLUDE_DIR)/package-version-override.mk
-
 PKG_BASE_NAME:=lib_tf
 PKG_SOURCE:=$(PKG_BASE_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_DIR:=$(BUILD_DIR)/$(PKG_BASE_NAME)-$(PKG_VERSION)

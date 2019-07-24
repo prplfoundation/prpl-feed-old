@@ -14,9 +14,6 @@ PKG_VERSION:=1.1.15
 PKG_RELEASE:=1
 PKG_MD5SUM:=d98d33668fe3539cd624e2c378571bdc
 PKG_BASE_NAME:=drv_event_logger
-
-include $(INCLUDE_DIR)/package-version-override.mk
-
 PKG_SOURCE:=$(PKG_BASE_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://localhost
 PKG_SOURCE_DIR:=$(BUILD_DIR)/$(PKG_BASE_NAME)-$(PKG_VERSION)

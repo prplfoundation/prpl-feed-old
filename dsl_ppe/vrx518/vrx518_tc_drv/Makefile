@@ -12,8 +12,6 @@ PKG_SOURCE_URL:=https://github.com/prplfoundation/intel_vrx518_tc_drv.git
 PKG_BASE_NAME:=vrx518_tc
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/package-version-override.mk
-
 
 KCONFIG_TC:=$(KCONFIG_TC_BASE)
 ifneq ($(CONFIG_TARGET_intel_mips_xrx500),)

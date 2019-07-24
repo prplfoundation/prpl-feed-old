@@ -21,11 +21,6 @@ PKG_FIXUP:=libtool
 PKG_INSTALL:=1
 PKG_CONFIG_DEPENDS:=CONFIG_IFXOS_SHARED_LIB
 
--include $(INCLUDE_DIR)/package-version-override.mk
-
-# re-define PATCH_DIR to get version-specific patches
-PATCH_DIR:=./patches-$(PKG_VERSION)
-
 include $(INCLUDE_DIR)/package.mk
 
 ifeq ($(DUMP),)
