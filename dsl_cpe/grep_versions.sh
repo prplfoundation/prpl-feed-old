@@ -1,0 +1,1 @@
+grep -r -P "(PKG_NAME:=|PKG_VERSION:=)" * | cut -d"=" -f2

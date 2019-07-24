@@ -1,0 +1,7 @@
+########## SYNTAX DEFINITION ##########
+syntax: glob
+
+hgtag.sh
+
+########## SYNTAX DEFINITION ##########
+syntax: regexp

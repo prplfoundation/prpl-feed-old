@@ -1,0 +1,10 @@
+config COMMON_DTI_DEBUG_PRINTS
+	bool
+	prompt "Enable verbose debug output"
+	default y
+
+config COMMON_DTI_ERROR_PRINTS
+	bool
+	prompt "Enable error output"
+	default y
+

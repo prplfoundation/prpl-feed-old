@@ -1,0 +1,122 @@
+--- a/src/common/dti_protocol_ext.c
++++ b/src/common/dti_protocol_ext.c
+@@ -1226,8 +1226,10 @@ IFX_int_t DTI_packetImageDownloadChunkSe
+ 
+    (void)DTI_packetResponceSet(
+          pDtiPacketIn, pDtiPacketOut,
+-         packetError, sizeof(DTI_D2H_ImageDownloadChunk_t) +  pDataIn->chunkSize, bufferOutSize, IFX_FALSE);
+-
++         packetError,
++         packetError == DTI_eNoError ?
++            sizeof(DTI_D2H_ImageDownloadChunk_t) +  pDataIn->chunkSize : 0,
++         bufferOutSize, IFX_FALSE);
+ 
+    return IFX_SUCCESS;
+ }
+--- a/src/common/dti_packet_device.c
++++ b/src/common/dti_packet_device.c
+@@ -1160,16 +1160,25 @@ DTI_STATIC IFX_int_t DTI_packet_TraceBuf
+       packetError = DTI_eErrConfiguration;
+    }
+ 
+-   (void)DTI_packetResponceSet(
+-            pDtiPacketIn, pUsedDtiPacketOut, packetError,
+-            (IFX_uint32_t)trBufReadSize_byte,
+-            (IFX_uint32_t)usedBufferOutSize,
+-            IFX_FALSE);
++   if (packetError == DTI_eNoError)
++   {
++      (void)DTI_packetResponceSet(
++               pDtiPacketIn, pUsedDtiPacketOut, packetError,
++               (IFX_uint32_t)trBufReadSize_byte,
++               (IFX_uint32_t)usedBufferOutSize,
++               IFX_FALSE);
+ 
+-   pUsedDtiPacketOut->header.packetOptions = DTI_e8Bit;
++      pUsedDtiPacketOut->header.packetOptions = DTI_e8Bit;
+ 
+-   *pBufferOutSize = usedBufferOutSize;
+-   *ppDtiPacketOut = pUsedDtiPacketOut;
++      *pBufferOutSize = usedBufferOutSize;
++      *ppDtiPacketOut = pUsedDtiPacketOut;
++   }
++   else
++   {
++      (void)DTI_packetResponceSet(
++               pDtiPacketIn, *ppDtiPacketOut, packetError,
++               0, *pBufferOutSize, IFX_FALSE);
++   }
+ 
+    return IFX_SUCCESS;
+ }
+--- a/src/cli/dti_cli.c
++++ b/src/cli/dti_cli.c
+@@ -197,8 +197,12 @@ DTI_STATIC IFX_int_t DTI_CLI_singleInter
+ {
+    if (pCliControl != IFX_NULL)
+    {
+-      if (IFXOS_LOCK_INIT_VALID(&pCliControl->cliResponceBufLock))
+-         {DTI_LockGet(&pCliControl->cliResponceBufLock);}
++      IFX_boolean_t bLockInitValid = IFXOS_LOCK_INIT_VALID(&pCliControl->cliResponceBufLock);
++
++      if (bLockInitValid)
++      {
++         DTI_LockGet(&pCliControl->cliResponceBufLock);
++      }
+ 
+       if (pCliControl->bRdyForCliSend == IFX_FALSE)
+       {
+@@ -228,8 +232,10 @@ DTI_STATIC IFX_int_t DTI_CLI_singleInter
+       }
+       pCliControl->responceBufferSize = 0;
+ 
+-      if (IFXOS_LOCK_INIT_VALID(&pCliControl->cliResponceBufLock))
+-         {DTI_LockRelease(&pCliControl->cliResponceBufLock);}
++      if (bLockInitValid)
++      {
++         DTI_LockRelease(&pCliControl->cliResponceBufLock);
++      }
+    }
+    else
+    {
+@@ -1139,7 +1145,10 @@ IFX_int_t DTI_packetHandler_cli(
+    const DTI_Packet_t   *pPacketIn;
+    DTI_Packet_t         *pPacketOut;
+    DTI_PTR_U            uPayload;
++#if defined(INCLUDE_CLI_SUPPORT) && (INCLUDE_CLI_SUPPORT == 1)
+    DTI_cli_control_t    *pIfControl = IFX_NULL;
++   IFX_boolean_t        bLockInitValid = IFX_FALSE;
++#endif
+    if ((pDtiProtServerCtx == IFX_NULL) || (pAgentCtx == IFX_NULL))
+    {
+       DTI_PRN_USR_ERR_NL(DTI_CLI, DTI_PRN_LEVEL_ERR,
+@@ -1197,8 +1206,11 @@ IFX_int_t DTI_packetHandler_cli(
+             if ((ifIdx >= 0) && (ifIdx < DTI_CLI_MAX_CLI_INTERFACES))
+             {
+                pIfControl = &pAgentCtx->cliControl[ifIdx];
+-               if (IFXOS_LOCK_INIT_VALID(&pIfControl->cliResponceBufLock))
+-                  {DTI_LockGet(&pIfControl->cliResponceBufLock);}
++               bLockInitValid = IFXOS_LOCK_INIT_VALID(&pIfControl->cliResponceBufLock);
++               if (bLockInitValid)
++               {
++                  DTI_LockGet(&pIfControl->cliResponceBufLock);
++               }
+             }
+             retVal = DTI_packet_CliString(
+                         pAgentCtx, pDtiProtServerCtx,
+@@ -1235,11 +1247,12 @@ IFX_int_t DTI_packetHandler_cli(
+       }
+    }
+ 
+-   if (pIfControl != IFX_NULL)
++#if defined(INCLUDE_CLI_SUPPORT) && (INCLUDE_CLI_SUPPORT == 1)
++   if (bLockInitValid)
+    {
+-      if (IFXOS_LOCK_INIT_VALID(&pIfControl->cliResponceBufLock))
+-         {DTI_LockRelease(&pIfControl->cliResponceBufLock);}
++      DTI_LockRelease(&pIfControl->cliResponceBufLock);
+    }
++#endif
+ 
+    return retVal;
+ }

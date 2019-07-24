@@ -1,0 +1,8 @@
+menu "Configuration"
+	depends on PACKAGE_dsl-vr11-firmware-xdsl
+
+	config dsl-vr11-firmware-xdsl_FW_IN_ROOTFS
+		bool "Include DSL Firmware in rootfs (instead of separate flash partition)"
+		default y
+
+endmenu

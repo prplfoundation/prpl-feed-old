@@ -1,0 +1,32 @@
+{
+        "LinkEncapsulationConfig":
+[
+    {
+        "id": "G.992.3_Annex_K_ATM,G.993.2_Annex_K_PTM",
+        "name": "Auto"
+    },
+    {
+        "id": "G.992.3_Annex_K_ATM,G.992.3_Annex_K_PTM",
+        "name": "ADSL-AUTO"
+    },    {
+        "id": "G.992.3_Annex_K_ATM",
+        "name": "ADSL-ATM"
+    },
+    {
+        "id": "G.992.3_Annex_K_PTM",
+        "name": "ADSL-PTM"
+    },
+    {
+        "id": "G.993.2_Annex_K_ATM,G.993.2_Annex_K_PTM",
+        "name": "VDSL-AUTO"
+    },    {
+        "id": "G.993.2_Annex_K_ATM",
+        "name": "VDSL-ATM"
+    },
+    {
+        "id": "G.993.2_Annex_K_PTM",
+        "name": "VDSL-PTM"
+    }
+]
+}
+

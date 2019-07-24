@@ -1,0 +1,67 @@
+config DSL_GFAST_DRV_PMI_ALL_STATIC
+	bool
+	prompt "Enable all-static build"
+	default n
+	help
+	If static-all is enabled the control_ive driver test application will be build 
+	in a raw static form. All libraries (also the OS libs) are linked statically.
+
+config DSL_GFAST_DRV_PMI_DEBUG
+	bool
+	prompt "Add -O1 -g3 to CFLAGS"
+	default n
+
+config DSL_GFAST_DRV_PMI_DEBUG_PRINTS
+	bool
+	prompt "Enable verbose debug output"
+	default y
+
+config DSL_GFAST_DRV_PMI_ERROR_PRINTS
+	bool
+	prompt "Enable error output"
+	default y
+
+config DSL_GFAST_DRV_PMI_STATISTICS
+	bool
+	prompt "Enable driver statistics support"
+	default y
+
+config DSL_GFAST_DRV_PMI_ERR_STRINGS
+	bool
+	prompt "Enable error and return code description"
+	default y
+
+config DSL_GFAST_DRV_PMI_PLATFORM_DRV
+	bool
+	prompt "Enable LINUX Platform Driver/Device"
+	default y
+
+config DSL_GFAST_DRV_PMI_DRV_BUILTIN_TESTS
+	bool
+	prompt "Enable driver builtin tests"
+	default n
+
+config DSL_GFAST_DRV_PMI_LAUTERBACH
+	bool
+	prompt "Enable Lauterbach settings"
+	default n
+
+choice
+	prompt "Device Access Mode"
+	default DSL_GFAST_DRV_PMI_MODE_EXT_FCT
+	help
+		Select the Device Access Mode (default for device, simulation, emulation).
+
+	config DSL_GFAST_DRV_PMI_MODE_none
+		bool "VRX618 Device - default device access"
+
+	config DSL_GFAST_DRV_PMI_MODE_EXT_FCT
+		bool "VRX618 Device - device access via function (testing, debugging)"
+
+	config DSL_GFAST_DRV_PMI_MODE_SIMULATION
+		bool "SW Simulation - Simulator Module required"
+
+	config DSL_GFAST_DRV_PMI_MODE_EMULATION
+		bool "Emulation"
+
+endchoice 

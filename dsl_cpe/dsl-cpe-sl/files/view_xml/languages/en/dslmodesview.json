@@ -1,0 +1,11 @@
+{
+    "dslmodesview.headername": "Mode Setting",
+    "dslmodesview.headerdescription": "DSL(Digital Subscriber Line) offers WAN DSL Connectivity on various DSL Modes. Provides configuration for xDSL modes, various annex modes and upstream and downstream attributes.",
+    "dslmodesview.helpkey":"dslmodehelp_english.html",
+    "Device.DSL.X_LANTIQ_COM_Config.DSL":"DSL",
+    "Device.DSL.X_LANTIQ_COM_Config.DSL PHY - TC":"DSL PHY - TC",
+    "Device.DSL.X_LANTIQ_COM_Config.Tx Retransmission":"US Retransmission",
+    "Device.DSL.X_LANTIQ_COM_Config.Rx Retransmission":"DS Retransmission",
+    "Device.DSL.X_LANTIQ_COM_Config.Vectoring":"Vectoring",
+    "Device.DSL.X_LANTIQ_COM_Config.Modes":"Modes"
+}

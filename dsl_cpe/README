@@ -1,0 +1,39 @@
+Proof of Concept for DSL PHY Subsystem (DSL POC)
+
+Update the feeds and install DSL PHY related packages from the feeds
+```
+./scripts/feeds update
+./scripts/feeds install dsl-vr11-firmware-xdsl dsl-cpe-mei-vrx dsl-cpe-api-vrx dsl-cpe-control-vrx ifxos
+```
+
+Apply the following configurations within "make menuconfig"
+```
+Intel -> DSL Subsystem ->
+   -*- dsl-cpe-api-vrx
+   <*> dsl-cpe-control-vrx
+   -*- dsl-cpe-mei-vrx
+      Configuration  --->
+         Device selection (VRX500)
+         Debug & Test mode (Standalone)
+         IRQ Polling mode (Active IRQ polling mode)
+         PPA Version (Without PPA support)
+      <*>   dsl-vr11-firmware-xdsl
+Lantiq -> IFXOS ->
+   <*> ifxos
+Kernel modules -> Intel ->
+   <*> kmod-vrx518_ep
+```
+
+Run make again to build the image
+```
+make
+```
+
+Within running image on the target DSL PHY related modules will be automatically installed/started and the link will be activated.
+Use the following command to get information on the link status.
+```
+/opt/intel/bin/dsl_cpe_pipe lsg
+```
+
+Note:
+Due to the missing dependency for the PPE/TC Driver the link will currently not be able to enter showtime (max. line state will be 0x380 and the link will be re-started).

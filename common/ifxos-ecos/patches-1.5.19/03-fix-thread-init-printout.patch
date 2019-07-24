@@ -1,0 +1,13 @@
+--- a/src/ecos/ifxos_ecos_thread.c
++++ b/src/ecos/ifxos_ecos_thread.c
+@@ -156,8 +156,8 @@ IFX_int32_t IFXOS_ThreadInit(
+          if(nStackSize == 0)
+          {
+             nStackSize = 4096;
+-            IFXOS_PRN_USR_ERR_NL( IFXOS, IFXOS_PRN_LEVEL_ERR,
+-               ("IFXOS ERROR - Thread Init - set default stack size to 4096" IFXOS_CRLF));
++            IFXOS_PRN_USR_ERR_NL( IFXOS, IFXOS_PRN_LEVEL_WRN,
++               ("IFXOS WARNING - Thread Init - set default stack size to 4096 for %s" IFXOS_CRLF, pName));
+          }
+ 
+          pThrCntrl->stack_pointer = IFXOS_MemAlloc(nStackSize);

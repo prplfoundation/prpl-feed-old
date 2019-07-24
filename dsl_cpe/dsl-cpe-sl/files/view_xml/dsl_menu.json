@@ -1,0 +1,38 @@
+{
+    "menu": [
+        {
+            "name": "Advanced",
+            "id": "profile",
+			"childrens": [
+			{
+				"name": "DSL",
+				"icon": "dsl",
+				"order": "1",
+				"childrens": [
+				{
+					"name": "Mode Setting",
+					"order": "1",
+					"viewtype": "tableform",
+					"view": "dslmodesviewform",
+					"childrens": []
+				},
+				{
+					"name": "Status",
+					"order": "2",
+					"viewtype": "custom",
+					"view": "dsl_status",
+					"childrens": []
+				},
+				{
+					"name": "ATM Channel",
+					"order": "3",
+					"viewtype": "tableform",
+					"view": "atm_channel",
+					"childrens": []
+				}
+				]
+			}
+			]
+        }
+    ]
+}

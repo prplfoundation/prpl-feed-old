@@ -1,0 +1,24 @@
+config DSL_CO_PMI_DTI_ALL_STATIC
+	bool
+	prompt "Enable all-static build"
+	default n
+	help
+	If all-static is enabled the PMI daemon and the PMI pipe client application
+	will be build in a raw static form. All libraries (also the OS libs) are
+	linked statically.
+
+config DSL_CO_PMI_DTI_DEBUG_PRINTS
+	bool
+	prompt "Enable verbose debug output"
+	default y
+
+config DSL_CO_PMI_DTI_ERROR_PRINTS
+	bool
+	prompt "Enable error output"
+	default y
+
+config DSL_CO_PMI_DTI_STANDALONE_AGENT
+	bool
+	prompt "Install the DTI PMI Standalone agent"
+	default y
+

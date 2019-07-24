@@ -1,0 +1,39 @@
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -13,7 +13,7 @@ endif
+ 
+ endif
+ 
+-lib_LIBRARIES = libifxos.a
++lib_LTLIBRARIES = libifxos_devio.la
+ 
+ AM_CPPFLAGS = \
+ 	-I@srcdir@\
+@@ -604,11 +604,11 @@ lib_ifxos_specific=\
+ 	$(lib_ifxos_ini_file_access_specific)
+ endif
+ 
+-libifxos_a_CFLAGS = \
++libifxos_devio_la_CFLAGS = \
+ 	$(AM_CFLAGS) \
+ 	$(libifxos_additional_cflags)
+ 
+-libifxos_a_SOURCES = \
++libifxos_devio_la_SOURCES = \
+ 	$(lib_ifxos_specific) \
+ 	$(lib_ifxos_common)\
+ 	$(lib_ifxos_extra_libraries)
+--- a/configure.in
++++ b/configure.in
+@@ -6,10 +6,10 @@ AC_INIT(lib_ifxos, 1.6.6, www.lantiq.com
+ AC_CONFIG_SRCDIR([config.h.in])
+ AC_CONFIG_HEADER([config.h])
+ AM_INIT_AUTOMAKE
++LT_INIT
+ 
+ # Checks for programs.
+ AC_PROG_CC
+-AC_PROG_RANLIB
+ AM_PROG_CC_C_O
+ 
+ # save the configure arguments

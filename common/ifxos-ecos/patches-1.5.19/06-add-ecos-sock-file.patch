@@ -1,0 +1,356 @@
+--- a/src/ecos/ifxos_ecos_socket.c
++++ b/src/ecos/ifxos_ecos_socket.c
+@@ -33,7 +33,6 @@
+ #include "ifxos_socket.h"
+ #include "ifxos_debug.h"
+ 
+-
+ /* ============================================================================
+    IFX eCos adaptation - User Space, Socket
+    ========================================================================= */
+--- a/src/include/ifxos_socket.h
++++ b/src/include/ifxos_socket.h
+@@ -433,7 +433,6 @@ IFX_int_t IFXOS_SocFdIsSet(
+ */
+ IFX_void_t IFXOS_SocFdZero(
+                IFXOS_socFd_set_t *pSocFdSet);
+-
+ #endif
+ 
+ /** @} */
+--- a/src/ecos/ifxos_ecos_print_io.c
++++ b/src/ecos/ifxos_ecos_print_io.c
+@@ -22,10 +22,10 @@
+ #include <stdio.h>            /* FILE */
+ 
+ #include "ifx_types.h"
++#include "ifxos_debug.h"
+ #include "ifxos_rt_if_check.h"
+ #include "ifxos_file_access.h"
+ #include "ifxos_print_io.h"
+-
+ /* ============================================================================
+    IFX eCos adaptation - User Space, I/O printout and get
+    ========================================================================= */
+@@ -126,6 +126,29 @@ static IFXOS_staticMemoryFile_t *IFXOS_I
+ 
+ #endif
+ 
++#  if ( defined(IFXOS_ADD_STATIC_SOCKET_FILE) && (IFXOS_ADD_STATIC_SOCKET_FILE == 1) )
++/**
++   Check if the given file fd points to a static socket file.
++*/
++static IFXOS_staticSocketFile_t *IFXOS_IsStaticSocketFile(
++                                       IFXOS_File_t      *pFileFd)
++{
++   IFX_int_t i;
++   IFXOS_staticSocketFile_t *pprivMemFile = IFX_NULL;
++
++   for (i= 0; i < IFXOS_MAX_NUM_OF_STATIC_SOCFILES; i++)
++   {
++      if (&IFXOS_privatSocketFiles[i] == (IFXOS_staticSocketFile_t *)pFileFd)
++      {
++         pprivMemFile = &IFXOS_privatSocketFiles[i];
++         break;
++      }
++   }
++
++   return pprivMemFile;
++}
++#  endif
++
+ /**
+    Print to a file, (pipe,) stdout, stderr or memory file.
+ 
+@@ -149,7 +172,10 @@ IFX_int_t IFXOS_FPrintf(
+ #if ( defined(IFXOS_ADD_STATIC_MEMORY_FILE) && (IFXOS_ADD_STATIC_MEMORY_FILE == 1) )
+    IFXOS_staticMemoryFile_t *pprivMemFile = IFX_NULL;
+ #endif
+-
++#if ( defined(IFXOS_ADD_STATIC_SOCKET_FILE) && (IFXOS_ADD_STATIC_SOCKET_FILE == 1) )
++   IFXOS_staticSocketFile_t *pprivSocFile = IFXOS_IsStaticSocketFile(stream);
++   IFX_int_t socSentBytes;
++#endif
+    IFXOS_RETURN_IF_POINTER_NULL(stream, IFX_ERROR);
+    IFXOS_RETURN_IF_POINTER_NULL(format, IFX_ERROR);
+ 
+@@ -167,6 +193,19 @@ IFX_int_t IFXOS_FPrintf(
+    }
+    else
+ #endif
++#if ( defined(IFXOS_ADD_STATIC_SOCKET_FILE) && (IFXOS_ADD_STATIC_SOCKET_FILE == 1) )
++   if (pprivSocFile)
++   {
++      nRet = vsnprintf(pprivSocFile->pBuffer, pprivSocFile->bufSize, format, ap);
++      socSentBytes = (IFX_int_t)send((int)pprivSocFile->socFd, (const char*)pprivSocFile->pBuffer, (int)nRet, 0);
++      if (nRet != socSentBytes)
++      {
++	   IFXOS_PRN_USR_ERR_NL( IFXOS, IFXOS_PRN_LEVEL_ERR,
++	      ("IFXOS ERROR - IFXOS_FPrintf, socket sent %d from %d." IFXOS_CRLF, socSentBytes, nRet));
++      }
++   }
++   else
++#endif
+    {
+       nRet = vfprintf(stream, format, ap);
+    }
+@@ -277,6 +316,10 @@ IFX_int_t IFXOS_VFPrintf (
+ #if ( defined(IFXOS_ADD_STATIC_MEMORY_FILE) && (IFXOS_ADD_STATIC_MEMORY_FILE == 1) )
+    IFXOS_staticMemoryFile_t *pprivMemFile = IFX_NULL;
+ #endif
++#if ( defined(IFXOS_ADD_STATIC_SOCKET_FILE) && (IFXOS_ADD_STATIC_SOCKET_FILE == 1) )
++   IFXOS_staticSocketFile_t *pprivSocFile = IFXOS_IsStaticSocketFile(stream);
++   IFX_int_t socSentBytes;
++#endif
+ 
+    IFXOS_RETURN_IF_POINTER_NULL(stream, IFX_ERROR);
+    IFXOS_RETURN_IF_POINTER_NULL(format, IFX_ERROR);
+@@ -292,6 +335,19 @@ IFX_int_t IFXOS_VFPrintf (
+    }
+    else
+ #endif
++#if ( defined(IFXOS_ADD_STATIC_SOCKET_FILE) && (IFXOS_ADD_STATIC_SOCKET_FILE == 1) )
++   if (pprivSocFile)
++   {
++      nRet = vsnprintf(pprivSocFile->pBuffer, pprivSocFile->bufSize, format, vaList);
++      socSentBytes = (IFX_int_t)send((int)pprivSocFile->socFd, (const char*)pprivSocFile->pBuffer, (int)nRet, 0);
++      if (nRet != socSentBytes)
++      {
++         IFXOS_PRN_USR_ERR_NL( IFXOS, IFXOS_PRN_LEVEL_ERR,
++            ("IFXOS ERROR - IFXOS_FPrintf, socket sent %d from %d." IFXOS_CRLF,
++            socSentBytes, nRet));
++      }
++   } else
++#endif
+    {
+       nRet = vfprintf(stream, format, vaList);
+    }
+--- a/src/ecos/ifxos_ecos_file_access.c
++++ b/src/ecos/ifxos_ecos_file_access.c
+@@ -25,6 +25,7 @@
+ #include "ifxos_file_access.h"
+ #include "ifxos_debug.h"
+ #include "ifxos_memory_alloc.h"
++#include "ifxos_socket.h"
+ 
+ #if ( defined(IFXOS_HAVE_FILE_ACCESS) && (IFXOS_HAVE_FILE_ACCESS == 1) )
+ #include <stdio.h>            /* FILE */
+@@ -613,6 +614,132 @@ IFX_int_t IFXOS_FMemClose(
+ 
+ #endif      /* #if ( defined(IFXOS_HAVE_MEMORY_FILE) && (IFXOS_HAVE_MEMORY_FILE == 1) ) */
+ 
++#if ( defined(IFXOS_HAVE_SOCKET) && (IFXOS_HAVE_SOCKET == 1) )
++#if ( defined(IFXOS_ADD_STATIC_SOCKET_FILE) && (IFXOS_ADD_STATIC_SOCKET_FILE == 1) )
++IFXOS_staticSocketFile_t IFXOS_privatSocketFiles[IFXOS_MAX_NUM_OF_STATIC_SOCFILES] = {0};
++
++IFXOS_STATIC IFXOS_File_t *IFXOS_StaticSocketFileOpen (
++                              IFXOS_socket_t    socFd,
++                              IFX_char_t        *pMemBuf,
++                              const IFX_uint_t  bufSize_byte)
++{
++   IFX_int_t i;
++   IFXOS_staticSocketFile_t *pprivSocFile = IFX_NULL;
++   IFXOS_File_t             *stream       = IFX_NULL;
++
++   for (i= 0; i < IFXOS_MAX_NUM_OF_STATIC_SOCFILES; i++)
++   {
++      if (IFXOS_privatSocketFiles[i].pBuffer == IFX_NULL)
++      {
++         IFXOS_privatSocketFiles[i].pBuffer = pMemBuf;
++         IFXOS_privatSocketFiles[i].bufSize = bufSize_byte;
++         pprivSocFile = &IFXOS_privatSocketFiles[i];
++         break;
++      }
++   }
++
++   if (pprivSocFile)
++   {
++      pprivSocFile->socFd = socFd;
++
++      stream = (IFXOS_File_t *)pprivSocFile;
++   }
++   else
++   {
++      IFXOS_PRN_USR_ERR_NL( IFXOS, IFXOS_PRN_LEVEL_ERR,
++         ("IFXOS ERROR - IFXOS_StaticSocketFileOpen, all static socket files busy." IFXOS_CRLF));
++   }
++
++   return stream;
++}
++
++IFXOS_STATIC IFX_int_t IFXOS_StaticSocketFileClose(
++                           IFXOS_File_t *pFileFd)
++{
++   IFX_int_t i;
++   IFXOS_staticSocketFile_t *pprivMemFile = IFX_NULL;
++
++   IFXOS_RETURN_IF_POINTER_NULL(pFileFd, IFX_ERROR);
++
++   for (i= 0; i < IFXOS_MAX_NUM_OF_STATIC_SOCFILES; i++)
++   {
++      if (&IFXOS_privatSocketFiles[i] == (IFXOS_staticSocketFile_t *)pFileFd)
++      {
++         pprivMemFile = &IFXOS_privatSocketFiles[i];
++         break;
++      }
++   }
++
++   if (pprivMemFile)
++   {
++      pprivMemFile->socFd = -1;
++      pprivMemFile->pBuffer = IFX_NULL;
++      pprivMemFile->bufSize = 0;
++
++      return IFX_SUCCESS;
++   }
++
++   IFXOS_PRN_USR_ERR_NL( IFXOS, IFXOS_PRN_LEVEL_ERR,
++      ("IFXOS ERROR - IFXOS_StaticMemoryFileClose, static socket file not found." IFXOS_CRLF));
++
++   return IFX_ERROR;
++}
++#endif   /* #if ( defined(IFXOS_ADD_STATIC_SOCKET_FILE) && (IFXOS_ADD_STATIC_SOCKET_FILE == 1) ) */
++
++/**
++   eCos User - Open a given socket as stream (file).
++   - The size is limited to 1 kBytes.
++   - The intention is to have a file where we can use the standard file
++     (stream) operations like fprintf etc.
++
++\param
++   socFd          - socket file descriptor
++
++\return
++   - pointer to FILE structure
++   - in case of error the return value is NULL
++*/
++IFXOS_File_t *IFXOS_FSocketOpen (
++                  IFX_int_t         socFd,
++                  IFX_char_t        *pMemBuf,
++                  const IFX_uint_t  bufSize_byte,
++                  const IFX_char_t  *pMode)
++{
++   IFXOS_File_t *stream = IFX_NULL;
++
++   IFXOS_RETURN_IF_POINTER_NULL(pMemBuf, IFX_NULL);
++   IFXOS_RETURN_IF_ARG_LE_ZERO(bufSize_byte, IFX_NULL);
++
++#if ( defined(IFXOS_ADD_STATIC_SOCKET_FILE) && (IFXOS_ADD_STATIC_SOCKET_FILE == 1) )
++   stream = IFXOS_StaticSocketFileOpen(socFd, pMemBuf, bufSize_byte);
++#endif
++
++   return stream;
++}
++
++/**
++   eCos User - Close the socket file.
++
++\param
++   pFileFd  - file handle from a previous file open command.
++
++\return
++   For Success - IFX_SUCCESS
++   No Success  - IFX_ERROR
++*/
++IFX_int_t IFXOS_FSocketClose(
++                  IFXOS_File_t *pFileFd)
++{
++   IFXOS_RETURN_IF_POINTER_NULL(pFileFd, IFX_ERROR);
++
++#if ( defined(IFXOS_ADD_STATIC_SOCKET_FILE) && (IFXOS_ADD_STATIC_SOCKET_FILE == 1) )
++   return IFXOS_StaticSocketFileClose(pFileFd);
++#else
++   return -1;
++#endif
++}
++
++#endif      /* #if ( defined(IFXOS_HAVE_SOCKET) && (IFXOS_HAVE_SOCKET == 1) ) */
+ /** @} */
+ 
+ #endif      /* #ifdef ECOS */
+--- a/src/include/ecos/ifxos_ecos_file_access.h
++++ b/src/include/ecos/ifxos_ecos_file_access.h
+@@ -116,6 +116,12 @@
+ /** max number of supported private memory files */
+ #define IFXOS_MAX_NUM_OF_STATIC_MEMFILES           3
+ 
++#ifndef IFXOS_ADD_STATIC_SOCKET_FILE
++#  define IFXOS_ADD_STATIC_SOCKET_FILE             0
++#endif
++
++#define IFXOS_MAX_NUM_OF_STATIC_SOCFILES           3
++
+ #if ( defined(IFXOS_HAVE_FILE_ACCESS) && (IFXOS_HAVE_FILE_ACCESS == 1) )
+ 
+ 
+@@ -182,6 +188,24 @@ extern IFXOS_staticMemoryFile_t IFXOS_pr
+ 
+ #endif
+ 
++#if ( defined(IFXOS_ADD_STATIC_SOCKET_FILE) && (IFXOS_ADD_STATIC_SOCKET_FILE == 1) )
++/**
++   Control struct to handle private socket files
++*/
++typedef struct
++{
++   /* points to the user given memfile buffer */
++   IFX_char_t  *pBuffer;
++   /* contains the buffer size */
++   IFX_uint_t  bufSize;
++   /* socket file descriptor */
++   IFX_int_t  socFd;
++} IFXOS_staticSocketFile_t;
++
++/* export control struct */
++extern IFXOS_staticSocketFile_t IFXOS_privatSocketFiles[];
++#endif /* #if ( defined(IFXOS_ADD_STATIC_SOCKET_FILE) && (IFXOS_ADD_STATIC_SOCKET_FILE == 1) ) */
++
+ #ifdef __cplusplus
+ }
+ #endif
+--- a/src/include/ifxos_file_access.h
++++ b/src/include/ifxos_file_access.h
+@@ -288,6 +288,43 @@ IFX_int_t IFXOS_FMemClose(
+ 
+ #endif      /* #if ( defined(IFXOS_HAVE_MEMORY_FILE) && (IFXOS_HAVE_MEMORY_FILE == 1) ) */
+ 
++/**
++   eCos User - Open a given socket as stream (file).
++   - The size is limited to 1 kBytes.
++   - The intention is to have a file where we can use the standard file
++     (stream) operations like fprintf etc.
++
++\param
++   socFd          - socket file descriptor
++\param
++   pMemBuf        - temporary buffer for fprintf operation.
++\param
++   bufSize_byte   - size of the memory buffer
++\param
++   pMode          - Points to the open mode string.
++                    Not used for mem files !
++\return
++   - pointer to FILE structure
++   - in case of error the return value is NULL
++*/
++IFXOS_File_t *IFXOS_FSocketOpen (
++                  IFX_int_t         socFd,
++                  IFX_char_t        *pMemBuf,
++                  const IFX_uint_t  bufSize_byte,
++                  const IFX_char_t  *pMode);
++
++/**
++   eCos User - Close the socket file.
++
++\param
++   pFileFd  - file handle from a previous file open command.
++
++\return
++   For Success - IFX_SUCCESS
++   No Success  - IFX_ERROR
++*/
++IFX_int_t IFXOS_FSocketClose(
++                  IFXOS_File_t *pFileFd);
+ 
+ /** @} */
+ 

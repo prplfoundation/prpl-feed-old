@@ -1,0 +1,19 @@
+config IFXOS_ECOS_OVERRIDE_DEVIO_SETTINGS
+	bool
+	prompt "Override DEVIO settings"
+	default n
+
+config IFXOS_ECOS_DEVIO_MAXDRIVERS
+	string "Maximum number of drivers supported by DEVIO extension"
+	default "6"
+	depends on IFXOS_ECOS_OVERRIDE_DEVIO_SETTINGS
+
+config IFXOS_ECOS_DEVIO_MAXDEVICES
+	string "Maximum number of devices supported by DEVIO extension"
+	default "108"
+	depends on IFXOS_ECOS_OVERRIDE_DEVIO_SETTINGS
+
+config IFXOS_ECOS_DEVIO_MAXFDS
+	string "Maximum number of device descriptors supported by DEVIO extension"
+	default "108"
+	depends on IFXOS_ECOS_OVERRIDE_DEVIO_SETTINGS

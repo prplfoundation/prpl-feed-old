@@ -1,0 +1,11 @@
+--- a/src/common/dti_connection.c
++++ b/src/common/dti_connection.c
+@@ -361,7 +361,7 @@ IFX_void_t DTI_conAddForRecvWait(
+ {
+    DTI_SocFdSet(pDtiCon->nFd, &pDtiConCntrl->rdFdSet);
+ 
+-   if ((IFX_int_t)pDtiCon->nFd > pDtiConCntrl->socFdMax)
++   if ((IFX_int_t)pDtiCon->nFd >= pDtiConCntrl->socFdMax)
+    {
+       pDtiConCntrl->socFdMax = (IFX_int_t)pDtiCon->nFd + 1;
+    }

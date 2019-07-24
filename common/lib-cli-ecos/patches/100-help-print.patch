@@ -1,0 +1,52 @@
+--- a/src/lib_cli_core.c
++++ b/src/lib_cli_core.c
+@@ -946,8 +946,7 @@ CLI_STATIC void cmd_core_tree_print__fil
+ {
+ 	int ret = 0;
+ 	int j = 0;
+-	int ch = 0, fill_char = 0;
+-	int help_clm = 18;
++	int ch = 0;
+ 
+ 	if (p_node == IFX_NULL)
+ 		return;
+@@ -969,31 +968,20 @@ CLI_STATIC void cmd_core_tree_print__fil
+ 			}
+ 		} else {
+ #ifdef CLI_INTERN_MASK_LONG
+-			if (p_node->cmd_data.mask & CLI_INTERN_MASK_LONG)
+-				help_clm *= 3;
+-
+ 			if ((p_node->cmd_data.mask & CLI_INTERN_MASK_LONG) == (mask & CLI_INTERN_MASK_LONG))
+ #endif
+ 			{
+-				if (clios_strcmp(p_node->p_key, CLI_EMPTY_CMD) == 0) {
+-					ch = cli_fprintf_spec(p_file, "   %s,", CLI_EMPTY_CMD_HELP);
+-				} else {
+-					ch = cli_fprintf_spec(p_file, "   %s,", p_node->p_key);
+-				}
++				ch = cli_fprintf_spec(p_file,
++					(p_node->cmd_data.mask & CLI_INTERN_MASK_LONG) ?
++						"   %-60s,%-60s" CLI_CRLF :
++						"   %-20s,%-20s" CLI_CRLF,
++					clios_strcmp(p_node->p_key, CLI_EMPTY_CMD) == 0 ?
++						CLI_EMPTY_CMD_HELP : p_node->p_key,
++					p_node->cmd_data.help);
++
+ 				if (ch < 0)
+ 					ch = 0;
+ 				*p_out_size += (unsigned int)ch;
+-				fill_char = help_clm - ch;
+-				if (fill_char > 0)
+-				{
+-					for (j = 0; j < fill_char; j++)
+-						(void)cli_fprintf_spec(p_file, " ");
+-					*p_out_size += (unsigned int)fill_char;
+-				}
+-				ret = cli_fprintf_spec(p_file,
+-					"%s" CLI_CRLF, p_node->cmd_data.help);
+-				if (ret > 0)
+-					*p_out_size += (unsigned int)ret;
+ 			}
+ 		}
+ 	}

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Intel</title>
+        <link href="css/Bootstrap/bootstrap.css" rel="stylesheet" type="text/css">
+        <script src="js/Bootstrap/bootstrap.js"></script>   
+        <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,500,700,100' rel='stylesheet' type='text/css'>
+<!--        <link rel="stylesheet" href="css/Custom/ltq_custom1.css">
+        <link rel="stylesheet" href="css/Custom/fonticons.css">
+        <link rel="stylesheet" href="css/Custom/adv_homepage.css">-->
+        <script src="controllers/advHomePageController.js"></script>       
+ 	<style type="text/css">
+        </style>
+    </head>
+    <body>
+        <div id="translation" class="hide">dslstatus</div>
+        <div id="homepage" class="container-fluid no-padding-hr" ng-controller="dslstatusController" ng-cloak>
+<!--Breadscrumbs starts here -->                                                                                                      
+            <div class="row ltq_breadcrumbs">                                                                                                     
+                <div  ng-repeat="breadcrumb in $root.breadcrumbs" >                                                                                   
+                    <ng-switch on="$first">                                                                                                               
+                        <div class="btn-group btn-breadcrumb1" ng-switch-when="true">                                                                         
+                            <div class="ltq_brd_home" >                                                                                                           
+                            <a  class="btn" ng-click="homefun()" ng-href="#/{{breadcrumb.path}}">                                                                 
+                                <i class="fa fa-home"></i>                                                                                                            
+                                    {{breadcrumb.name}}                                                                                                                   
+                            </a>                                                                                                                                  
+                            </div>                                                                                                                                
+                        </div>                                                                                                                                
+
+                        <div class="btn-group btn-breadcrumb" ng-switch-when="false" >                                                                        
+
+                            <span class="btn btn-default not-active" ng-if="breadcrumb.path == 'nothing' || $last == true" >                                      
+                                {{breadcrumb.name}}                                                                                                               
+                            </span>                                                                                                                               
+                            <span ng-if ="breadcrumb.path != 'nothing' &&
+                                                    $last == false">                                                                                                                              
+                                <a  class="btn" ng-href="#/{{breadcrumb.path}}">                                                                                      
+                                    <i></i>                                                                                                                               
+                                    {{breadcrumb.name}}                                                                                                                   
+                                </a>                                                                                                                                  
+                            </span>                                                                                                                               
+                        </div>                                                                                                                                 
+
+                    </ng-switch>                                                                                                                            
+                </div>                                                                                                                                   
+            </div>                                                                                                                                  
+<!--Breadscrumbs ends here --> 
+
+            <div class="subheader">
+                <div>
+                    <img src="images/icons/dsl.png" class="iconDetails" alt="img">
+                </div>
+                <div><h4 ng-bind="'dslstatus.headername' | translate"></h4></div>
+                <p ng-bind="'dslstatus.headerdescription' | translate"></p>
+            </div>
+            <div class="tabs-container ng-scope">
+                <ul class="nav nav-tabs pull-left ipvbtn">
+                    <li class="active">
+                        <a data-toggle="tab" aria-expanded="false" data-target="#dsl1">DSL1</a></li>
+                    <li>
+                        <a data-toggle="tab" data-target="#dsl2" ng-if="noOfDslEntries == '2'">DSL2</a></li>
+                </ul>
+                <div class="tab-content ipvtabcontent">
+                    <div id="dsl1" class="panel-body tab-pane fade in active ng-scope">
+                        <div class="row">
+                            <adv-widget
+                                title="Line Information"
+                                icon="dsl-panel-icon"
+                                                    time="10000"
+                                polling="false"
+                                webname='["Modem Status","Power Management Mode","Vendor ID","Upstream Max Attainable Data Rate (Kbps)","Downstream Max Attainable Data Rate (Kbps)"]'
+                                url="cgi_get?Object=Device.DSL.Line.1&Status=&PowerManagementState=&XTUCVendor=&UpstreamMaxBitRate=&DownstreamMaxBitRate=">
+                            </adv-widget>
+                        <adv-widget
+                            title="Channel Information"
+                            icon="dsl-panel-icon"
+                            time="10000"
+                            polling="false"
+                            webname='["Mode Selected","Latency Type","Upstream Data Rate (Kbps)","Downstream Data Rate (Kbps)","Interleaver Depth"]'
+                            url="cgi_get?Object=Device.DSL.Channel.1&LinkEncapsulationUsed=&LPATH=&UpstreamCurrRate=&DownstreamCurrRate=&INTLVDEPTH=">
+                        </adv-widget>
+                        <adv-widget
+                            title="More Line Information"
+                            icon="dsl-panel-icon"
+                            time="10000"
+                            polling="false"
+                            webname='["Upstream SNR Margin","Downstream SNR Margin","Upstream Trellis-Coded Modulation","Downstream Trellis-Coded Modulation"]'
+                            url="cgi_get?Object=Device.DSL.Line.1&UpstreamNoiseMargin=&DownstreamNoiseMargin=&TRELLISus=&TRELLISds=">
+                        </adv-widget>
+                    </div>
+                    <div class="row">
+                        <adv-widget
+                            title="Line Test Parameters"
+                            icon="dsl-panel-icon"
+                            time="10000"
+                            polling="false"
+                            webname='["Upstream Line Attenuation","Downstream Line Attenuation","Upstream Signal Attenuation","Downstream Signal Attenuation"]'
+                            url="cgi_get?Object=Device.DSL.Line.1.TestParams&LATNus=&LATNds=&SATNus=&SATNds=">
+                        </adv-widget>
+                        <adv-widget
+                            title="Statistics"
+                            icon="dsl-panel-icon"
+                            time="10000"
+                            polling="true"
+                            webname='["CRC errors (ATU-R)","CRC errors (ATU-C)","FEC errors (ATU-R)","FEC errors (ATU-C)","HEC errors (ATU-R)","HEC errors (ATU-C)","Errored Seconds","Severely Errored Seconds"]'
+                            url="cgi_get?Object=Device.DSL.Channel.1.Stats.Total&XTURCRCErrors=&XTUCCRCErrors=&XTURFECErrors=&XTUCFECErrors=&XTURHECErrors=&XTUCHECErrors=Object=Device.DSL.Line.1.Stats.Total&ErroredSecs=&SeverelyErroredSecs=">
+                        </adv-widget>
+                        </div>
+                    </div>
+                    <div id="dsl2" class="panel-body tab-pane fade" ng-if="noOfDslEntries == '2'">
+                        <div class="row">
+                            <adv-widget
+                                title="Line Information"
+                                icon="dsl-panel-icon"
+                                                    time="10000"
+                                polling="false"
+                                webname='["Modem Status","Power Management Mode","Vendor ID","Upstream Max Attainable Data Rate (Kbps)","Downstream Max Attainable Data Rate (Kbps)"]'
+                                url="cgi_get?Object=Device.DSL.Line.2&Status=&PowerManagementState=&XTUCVendor=&UpstreamMaxBitRate=&DownstreamMaxBitRate=">
+                            </adv-widget>
+                        <adv-widget
+                            title="Channel Information"
+                            icon="dsl-panel-icon"
+                            time="10000"
+                            polling="false"
+                            webname='["Mode Selected","Latency Type","Upstream Data Rate (Kbps)","Downstream Data Rate (Kbps)","Interleaver Depth"]'
+                            url="cgi_get?Object=Device.DSL.Channel.2&LinkEncapsulationUsed=&LPATH=&UpstreamCurrRate=&DownstreamCurrRate=&INTLVDEPTH=">
+                        </adv-widget>
+                        <adv-widget
+                            title="More Line Information"
+                            icon="dsl-panel-icon"
+                            time="10000"
+                            polling="false"
+                            webname='["Upstream SNR Margin","Downstream SNR Margin","Upstream Trellis-Coded Modulation","Downstream Trellis-Coded Modulation"]'
+                            url="cgi_get?Object=Device.DSL.Line.2&UpstreamNoiseMargin=&DownstreamNoiseMargin=&TRELLISus=&TRELLISds=">
+                        </adv-widget>
+                    </div>
+                    <div class="row">
+                        <adv-widget
+                            title="Line Test Parameters"
+                            icon="dsl-panel-icon"
+                            time="10000"
+                            polling="false"
+                            webname='["Upstream Line Attenuation","Downstream Line Attenuation","Upstream Signal Attenuation","Downstream Signal Attenuation"]'
+                            url="cgi_get?Object=Device.DSL.Line.2.TestParams&LATNus=&LATNds=&SATNus=&SATNds=">
+                        </adv-widget>
+                        <adv-widget
+                            title="Statistics"
+                            icon="dsl-panel-icon"
+                            time="10000"
+                            polling="true"
+                            webname='["CRC errors (ATU-R)","CRC errors (ATU-C)","FEC errors (ATU-R)","FEC errors (ATU-C)","HEC errors (ATU-R)","HEC errors (ATU-C)","Errored Seconds","Severely Errored Seconds"]'
+                            url="cgi_get?Object=Device.DSL.Channel.2.Stats.Total&XTURCRCErrors=&XTUCCRCErrors=&XTURFECErrors=&XTUCFECErrors=&XTURHECErrors=&XTUCHECErrors=Object=Device.DSL.Line.2.Stats.Total&ErroredSecs=&SeverelyErroredSecs=">
+                        </adv-widget>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+       </div>
+    </body>
+</html>

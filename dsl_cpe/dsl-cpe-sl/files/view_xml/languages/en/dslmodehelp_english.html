@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Help Text From English</title>
+    </head>
+    <body>
+        <div class="container_help">
+            <h1>MODE Setting</h1>
+            <div class="row">
+                <p>DSL(Digital Subscriber Line) offers WAN DSL Connectivity on various DSL Modes. Provides configuration for xDSL modes, various annex modes and upstream and downstream attributes.</p>
+           </div>
+            <h3>Default Values</h3>
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table">
+                         <tbody>
+                            <tr>
+                                <td>DSL-Phy-TC</td>
+                                <td>Auto</td>
+                            </tr>
+                            <tr>
+                                <td>UpStream Retransmission</td>
+                                <td>Enabled</td>
+                             </tr>
+			                 <tr>
+				                <td>DownStream Retransmission</td>
+                                <td>Enabled</td>
+                            </tr>
+			                <tr>
+                                <td>Vectoring</td>
+                                <td>Enabled in Auto mode</td>
+                            </tr>
+			             <tr>
+                                <td>Annex Modes</td>
+                                <td>G.dmt, ADSL, ADSL2, ADSL2 AnnexL, ADSL2+, VDSL</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+	       <h3>Note</h3>
+            <div class="row">
+                        <p>On selecting DSL-Phy-TC as “Auto”, the CPE can auto negotiate either on VDSL PTM or ADSL ATM modes depending on the CO configuration</p>
+            </div>
+            <div class="row">
+                        <p>On selecting DSL-Phy-TC as ADSL AUTO or VDSL AUTO , CPE will negotiate in ATM/PTM mode of ADSL or VDSL modes respectively depending upon the CO Configuration</p>
+            </div>
+            <div class="row">
+                        <p>Selecting ADSL ATM/PTM/AUTO in PHY-TC configuration makes VDSL2 selection in Modes configuration obsolete</p>
+            </div>
+            <div class="row">
+                        <p>Selecting any ADSL Annexures in Modes configuration is obsoleted on configuring VDSL ATM/PTM/Auto in PHY-TC Configuration</p>
+        </div>
+            </div>
+    </body>
+</html>

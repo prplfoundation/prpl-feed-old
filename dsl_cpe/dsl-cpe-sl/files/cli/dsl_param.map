@@ -1,0 +1,10 @@
+{"Status","Device.DSL."}
+{"line_info","Device.DSL.Line.1."}
+{"link_status","Device.DSL.Line.1.Status"}
+{"us_max_attainable_rate","Device.DSL.Line.1.UpstreamMaxBitRate"}
+{"ds_max_attainable_rate","Device.DSL.Line.1.DownstreamMaxBitRate"}
+{"channel_info","Device.DSL.Channel.1."}
+{"link_status","Device.DSL.Channel.1.Status"}
+{"negotiated_mode","Device.DSL.Channel.1.LinkEncapsulationUsed"}
+{"us_current_data_rate","Device.DSL.Channel.1.UpstreamCurrRate"}
+{"ds_current_data_rate","Device.DSL.Channel.1.DownstreamCurrRate"}

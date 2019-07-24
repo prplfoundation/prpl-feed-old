@@ -1,0 +1,41 @@
+config DSL_GFAST_MAX_DEVICE_VRX618
+	string
+	prompt "Number of devices"
+	default 1
+	help
+	This option specifies the number of Vinax3 devices to support.
+	
+config DSL_GFAST_LINES_PER_DEVICE_VRX618
+	string
+	prompt "Lines per Device"
+	default 1
+	help
+	This option specifies the number of lines per device to support.
+
+config DSL_GFAST_CHANNELS_PER_LINE_VRX618
+	string
+	prompt "Channels per Lines"
+	default 1
+	help
+	This option specifies the number of bearer channels per line to support.
+
+config DSL_GFAST_MAX_PROFILE_VRX618
+	string
+	prompt "Max Number of Profiles"
+	default 8
+	help
+	This option specifies the number of configuration profiles. Normally it should match the total number of lines: <num of devices> * <lines per device>.
+
+config DSL_GFAST_DEBUG_FEATURES
+   bool
+   prompt "Additional Debug Features"
+   default n
+   help
+   This switch enables additional debug features like PM TIF and DB test
+
+config DSL_GFAST_LIBRARY_ONLY
+   bool
+   prompt "DSL-Library only"
+   default n
+   help
+   This switch enables a build of the DSL-API as a library only. DSL-Daemon and dsl_pipe tool are skipped.

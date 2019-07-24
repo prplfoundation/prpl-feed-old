@@ -1,0 +1,18 @@
+menu "advanced configuration (for developers)"
+        depends on PACKAGE_ltq-voice-kpi2udp
+
+config LTQ_VOICE_KPI2UDP_USER_FLAGS
+        depends on PACKAGE_ltq-voice-kpi2udp
+        string "Additional CFLAGS"
+        default ""
+        help
+                Additional CFLAGS for compilation (for developers)
+
+config LTQ_VOICE_KPI2UDP_USER_OPTIONS
+        depends on PACKAGE_ltq-voice-kpi2udp
+        string "Additional autogen configure options"
+        default ""
+        help
+                Additional autogen configure options (for developers)
+endmenu
+

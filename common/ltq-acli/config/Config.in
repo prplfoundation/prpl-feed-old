@@ -1,0 +1,26 @@
+config LANTIQ_ACLI_PIPE_NAME
+        depends on PACKAGE_ltq-acli
+        string "Default name of pipe"
+        default ""
+        help
+                Default name of pipe
+
+menu "Advanced configuration (for developers)"
+        depends on PACKAGE_ltq-acli
+
+config LANTIQ_ACLI_USER_FLAGS
+        depends on PACKAGE_ltq-acli
+        string "Additional CFLAGS"
+        default ""
+        help
+                Additional CFLAGS for compilation (for developers)
+
+config LANTIQ_ACLI_USER_OPTIONS
+        depends on PACKAGE_ltq-acli
+        string "Additional configure options"
+        default ""
+        help
+                Additional configure options (for developers)
+
+endmenu
+

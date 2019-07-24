@@ -1,0 +1,35 @@
+Generic values of DEVIO_MAXs set in header (ready to be overwritten in fly by eCos specific values; overwriting defined in Makefile)
+
+diff --git a/src/include/ifxos_device_io.h b/src/include/ifxos_device_io.h
+index 12745cb..fff32b5 100644
+--- a/src/include/ifxos_device_io.h
++++ b/src/include/ifxos_device_io.h
+@@ -34,19 +34,22 @@ extern "C" {
+ #endif
+ 
+ /** Maximum number of drivers supported by LIB_IO extension. */
+-#ifndef DEVIO_MAXDRIVERS
+-#define DEVIO_MAXDRIVERS       (6)
++#ifdef DEVIO_MAXDRIVERS
++#undef DEVIO_MAXDRIVERS
+ #endif
++#define DEVIO_MAXDRIVERS       (6)
+ 
+ /** Maximum number of devices supported by LIB_IO extension. */
+-#ifndef DEVIO_MAXDEVICES
+-#define DEVIO_MAXDEVICES       (200)
++#ifdef DEVIO_MAXDEVICES
++#undef DEVIO_MAXDEVICES
+ #endif
++#define DEVIO_MAXDEVICES       (200)
+ 
+ /** Maximum number of device descriptors supported by LIB_IO extension. */
+-#ifndef DEVIO_MAXFDS
+-#define DEVIO_MAXFDS           (300)
++#ifdef DEVIO_MAXFDS
++#undef DEVIO_MAXFDS
+ #endif
++#define DEVIO_MAXFDS           (300)
+ 
+ 
+ /** Polling time (msec) for DEVIO_select() implementation. */

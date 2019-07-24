@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CLISH_MODULE xmlns="http://clish.sourceforge.net/XMLSchema" 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xsi:schemaLocation="http://clish.sourceforge.net/XMLSchema
+                     http://clish.sourceforge.net/XMLSchema/clish.xsd">
+	<!--=======================================================-->
+
+<VIEW name="dsl-view" service="dsl">
+
+<!-- Show commands -->
+	<COMMAND name="show dsl" help="Show DSL information"/>
+	<COMMAND name="show dsl status" help="Show DSL Link Status"
+	       display="link_status,us_max_attainable_rate,ds_max_attainable_rate,negotiated_mode,us_current_data_rate,ds_current_data_rate" >
+	       <ACTION builtin="cli_cmdHandler"> </ACTION>
+	</COMMAND>
+</VIEW>
+</CLISH_MODULE>

@@ -1,0 +1,30 @@
+--- a/src/include/ecos/ifxos_ecos_common.h
++++ b/src/include/ecos/ifxos_ecos_common.h
+@@ -69,7 +69,7 @@
+ 
+ #define IFXOS_TICKS_PER_SECOND   100
+ #define IFXOS_TICK_TO_MSEC(tick)	(((tick)*10)) 
+-#define IFXOS_MSEC_TO_TICK(msec)	((cyg_tick_count_t)(msec)/10)
++#define IFXOS_MSEC_TO_TICK(msec)	((msec)/10)
+ 
+ /** @} */
+ 
+--- a/src/ecos/ifxos_ecos_event.c
++++ b/src/ecos/ifxos_ecos_event.c
+@@ -153,14 +153,13 @@ IFX_int_t IFXOS_EventWait(
+                IFX_int32_t    *pRetCode)
+ {
+    cyg_flag_value_t ret = 1;
++   cyg_tick_count_t t = cyg_current_time() + IFXOS_MSEC_TO_TICK(waitTime_ms);
+ 
+    if (pEventId)
+    {
+       if (IFXOS_EVENT_INIT_VALID(pEventId) == IFX_TRUE)
+       {
+-         ret = cyg_flag_timed_wait(&pEventId->object, 1, CYG_FLAG_WAITMODE_AND | CYG_FLAG_WAITMODE_CLR, 
+-                  (cyg_current_time() + IFXOS_MSEC_TO_TICK(waitTime_ms)) );
+-   
++         ret = cyg_flag_timed_wait(&pEventId->object, 1, CYG_FLAG_WAITMODE_AND | CYG_FLAG_WAITMODE_CLR, t);
+          if( ret != 0 )
+          {
+             if(pRetCode)

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<view viewid="dslmodesview">
+<helptext></helptext>
+    <header>
+    <image>images/icons/dsl.png</image>
+    <name>Mode Setting</name>
+        <description>Support for configuration of various xDSL Modes</description>
+    </header>
+    <object  viewtype="form" title="Settings" icon="dsl" >
+        <object name="Device.DSL.X_LANTIQ_COM_Config">
+            <parameter  name="Enable" type="toggle" webname="DSL"></parameter>
+        </object>
+        <object name="Device.DSL.X_LANTIQ_COM_Config" parentname="Device.DSL.X_LANTIQ_COM_Config" depends="Enable" parent="true">
+            <row>
+                <col><parameter   name="LinkEncapsulationConfig"  type="dropdown"  url="dslconnectype" webname="DSL PHY - TC" ></parameter></col>
+            </row>
+            <row>
+                <col><parameter   name="ReTxUs"  type="checkbox"  webname="US Retransmission" ></parameter></col>
+                <col></col>
+            </row>
+            <row>
+                <col><parameter   name="ReTxDs_V"  type="checkbox"  webname="VDSL DS Retransmission" ></parameter></col>
+                <col><parameter   name="ReTxDs_A"  type="checkbox"  webname="ADSL DS Retransmission" ></parameter></col>
+            </row>
+            <row>
+                <col><parameter   name="SraUs_V"  type="checkbox"  webname="VDSL US Rate Adaptation" ></parameter></col>
+                <col><parameter   name="SraDs_V"  type="checkbox"  webname="VDSL DS Rate Adaptation" ></parameter></col>
+            </row>
+            <row>
+                <col><parameter   name="Vectoring"  type="dropdown"  validvalues="On,Off,Auto,Friendly" webname="Vectoring" required="false" ></parameter></col>
+            </row>
+            <parameter  name="XTSE_Modes"  type="multi-checkbox" webname="Modes" url="dslmodes"></parameter>
+        </object>
+        <parameter  name="Modify"  action="post" routeurl="Apply($event)" type="submitbutton" webname="Apply" maxlen="64"></parameter>
+    </object>
+</view>
+

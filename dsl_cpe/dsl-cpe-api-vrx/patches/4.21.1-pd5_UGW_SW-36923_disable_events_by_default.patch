@@ -1,0 +1,54 @@
+diff -Naur org/configure.in new/configure.in
+--- org/configure.in	2018-10-29 20:22:17.000000000 +0100
++++ new/configure.in	2019-03-13 14:23:22.247841707 +0100
+@@ -1,7 +1,7 @@
+ 
+ AC_REVISION($Revision: 1.177 $)
+ 
+-AC_INIT([DSL CPE API driver],[4.21.1-pd4],[],[drv_dsl_cpe_api])
++AC_INIT([DSL CPE API driver],[4.21.1-pd5],[],[drv_dsl_cpe_api])
+ 
+ AC_CONFIG_SRCDIR(src/Makefile.am)
+ AM_INIT_AUTOMAKE([tar-pax])
+diff -Naur org/src/common/drv_dsl_cpe_api.c new/src/common/drv_dsl_cpe_api.c
+--- org/src/common/drv_dsl_cpe_api.c	2018-05-28 20:50:23.000000000 +0200
++++ new/src/common/drv_dsl_cpe_api.c	2019-03-13 14:24:31.255584779 +0100
+@@ -1355,10 +1355,6 @@
+    /* Set LINIT value to LINIT_UNKNOWN*/
+    DSL_CTX_WRITE_SCALAR(pContext, nErrCode, lineInitStatus.nLineInitStatus, LINIT_UNKNOWN);
+ 
+-#if defined(DSL_VRX_DEVICE_VR11)
+-   DSL_CTX_WRITE_SCALAR(pContext, nErrCode, bFwEventActivation, DSL_TRUE);
+-#endif
+-
+    pContext->bInitComplete = DSL_TRUE;
+ 
+    /* Generate DSL_EVENT_S_INIT_READY event*/
+diff -Naur org/src/device/drv_dsl_cpe_device_vrx.c new/src/device/drv_dsl_cpe_device_vrx.c
+--- org/src/device/drv_dsl_cpe_device_vrx.c	2018-05-28 20:50:23.000000000 +0200
++++ new/src/device/drv_dsl_cpe_device_vrx.c	2019-03-13 14:26:07.931058742 +0100
+@@ -4462,18 +4462,14 @@
+    }
+ 
+    DSL_CTX_READ_SCALAR(pContext, nErrCode, bFwEventActivation, bFwEventActivation);
+-   if (bFwEventActivation)
++   nErrCode = DSL_DRV_VRX_SendMsgModemFSMEventConfigure(pContext, bFwEventActivation);
++   if( nErrCode != DSL_SUCCESS )
+    {
+-      nErrCode = DSL_DRV_VRX_SendMsgModemFSMEventConfigure(pContext, bFwEventActivation);
+-
+-      if( nErrCode != DSL_SUCCESS )
+-      {
+-         DSL_DEBUG( DSL_DBG_ERR,
+-            (pContext, SYS_DBG_ERR"DSL[%02d]: ERROR - ModemFSMEventConfigure send failed!"
+-            DSL_DRV_CRLF, DSL_DEV_NUM(pContext)));
++      DSL_DEBUG( DSL_DBG_ERR,
++         (pContext, SYS_DBG_ERR"DSL[%02d]: ERROR - ModemFSMEventConfigure send failed!"
++         DSL_DRV_CRLF, DSL_DEV_NUM(pContext)));
+ 
+-          return nErrCode;
+-      }
++      return nErrCode;
+    }
+ 
+    return DSL_SUCCESS;

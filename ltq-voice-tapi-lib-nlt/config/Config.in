@@ -1,0 +1,61 @@
+menu "advanced configuration (for developers)"
+        depends on PACKAGE_ltq-voice-lib-nlt
+
+config LTQ_VOICE_LIB_NLT_USER_FLAGS
+        depends on PACKAGE_ltq-voice-lib-nlt
+        string "Additional CFLAGS"
+        default ""
+        help
+                Additional CFLAGS for compilation (for developers)
+
+config LTQ_VOICE_LIB_NLT_USER_OPTIONS
+        depends on PACKAGE_ltq-voice-lib-nlt
+        string "Additional autogen configure options"
+        default ""
+        help
+                Additional autogen configure options (for developers)
+
+config  LTQ_VOICE_LIB_NLT_IFXOS_SUPPORT
+	bool "enable IFXOS library support"
+	depends on PACKAGE_ltq-voice-lib-nlt
+	default n
+	help
+		Option to enable IFXOS library usage
+
+endmenu
+
+config  LTQ_VOICE_LIB_NLT_VMMC
+	bool "enable support for SLIC1xx devices"
+	depends on PACKAGE_ltq-voice-lib-nlt
+		default y if PACKAGE_ltq-voice-vmmc
+	default y if PACKAGE_ltq-voice-vmmc || PACKAGE_ltq-voice-vmmc-xrx500
+	default n
+	help
+		Option to enable Line Testing support for SLIC1xx family devices
+
+config  LTQ_VOICE_LIB_NLT_S220
+	bool "enable support for SLIC2xx devices"
+	depends on PACKAGE_ltq-voice-lib-nlt
+		default y if PACKAGE_ltq-voice-s220
+	default y if PACKAGE_ltq-voice-s220 || PACKAGE_ltq-voice-vmmc-xrx500
+	default n
+	help
+		Option to enable Line Testing support for SLIC2xx family devices
+
+config  LTQ_VOICE_LIB_NLT_DXT
+	bool "enable support for DUSLIC-xT device"
+	depends on PACKAGE_ltq-voice-lib-nlt
+	depends on PACKAGE_ltq-voice-duslic_xt
+	default y if PACKAGE_ltq-voice-duslic_xt
+	default n
+	help
+		Option to enable Line Testing support for DUSLIC-xT device
+
+config  LTQ_VOICE_LIB_NLT_DXS
+	bool "enable support for DUSLIC XS device"
+	depends on PACKAGE_ltq-voice-lib-nlt
+	default y if PACKAGE_ltq-voice-duslic_xs
+	default n
+	help
+		Option to enable Line Testing support for DUSLIC XS device
+		

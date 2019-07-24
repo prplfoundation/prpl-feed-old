@@ -1,0 +1,11 @@
+--- a/src/include/ecos/ifxos_ecos_print.h
++++ b/src/include/ecos/ifxos_ecos_print.h
+@@ -90,7 +90,7 @@
+    ========================================================================= */
+ 
+ /** Define the used CR/LF sequence */
+-#define IFXOS_CRLF                              "\n\r"
++#define IFXOS_CRLF                              "\r\n"
+ 
+ #ifdef __GNUC__
+    /** Debug Print on Int-Level (formated) */

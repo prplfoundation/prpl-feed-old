@@ -1,0 +1,46 @@
+{
+        "XTSE_Modes":
+[
+    {
+        "id": "1",
+        "name": "G.dmt"
+    },
+    {
+        "id": "2",
+        "name": "T1.413"
+    },    
+    {
+        "id": "3",
+        "name": "G.Lite"
+    },
+    {
+        "id": "4",
+        "name": "ADSL"
+    },
+    {
+        "id": "5",
+        "name": "ADSL2"
+    },    
+    {
+        "id": "6",
+        "name": "ADSL2 AnnexL"
+    },
+    {
+        "id": "7",
+        "name": "ADSL2 AnnexM"
+    },
+    {
+        "id": "8",
+        "name": "ADSL2+"
+    },    
+    {
+        "id": "9",
+        "name": "ADSL2+ AnnexM"
+    },
+    {
+        "id": "10",
+        "name": "VDSL2"
+    }
+]
+}
+

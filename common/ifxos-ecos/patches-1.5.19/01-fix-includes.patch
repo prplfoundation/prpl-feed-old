@@ -1,0 +1,25 @@
+Index: lib_ifxos-1.5.17/src/include/ecos/ifxos_ecos_device_access.h
+===================================================================
+--- lib_ifxos-1.5.17.orig/src/include/ecos/ifxos_ecos_device_access.h	2012-07-12 15:07:16.000000000 +0200
++++ lib_ifxos-1.5.17/src/include/ecos/ifxos_ecos_device_access.h	2012-07-12 15:15:36.000000000 +0200
+@@ -42,8 +42,6 @@
+ #  include "ifxos_device_io.h"
+ #endif
+ 
+-#include <network.h>     /* _IO macro sys/ioccom.h or lwip/sockets.h */
+-
+ /* ============================================================================
+    IFX eCos adaptation - supported features
+    ========================================================================= */
+@@ -64,11 +62,6 @@
+    IFX eCos adaptation - types
+    ========================================================================= */
+ 
+-#ifndef _IO
+-   /** required form OS headers */
+-#  error "missing _IO definiton"
+-#endif
+-
+ #if (defined(IFXOS_USE_DEV_IO) && (IFXOS_USE_DEV_IO == 1))
+ 
+ /** eCos User - select, type fd_set for device select. */

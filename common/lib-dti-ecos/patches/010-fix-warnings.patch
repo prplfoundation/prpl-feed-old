@@ -1,0 +1,41 @@
+--- a/application/dti_agent/src/dti_agent_main.c
++++ b/application/dti_agent/src/dti_agent_main.c
+@@ -198,10 +198,13 @@ DTI_STATIC IFX_void_t DTI_agentDoHelp(vo
+ DTI_STATIC IFX_int_t DTI_agent(
+                            DTI_AgentCtx_t **ppDtiAgentCtx)
+ {
+-   IFX_int_t         devIfNum = 0, numOfDevices = 0, linesPerDevice = 0, bAutoDevMsg = 0;
++   IFX_int_t         devIfNum = 0;
+    DTI_AgentCtx_t             *pDtiAgentCtx;
+    DTI_AgentStartupSettingsXDevs_t  AgentStartupSettingsXDevs;
++#if defined(DEVICE_GENERIC)
+    DTI_DeviceAccessFct_t            *pDeviceAccessFct = IFX_NULL;
++   IFX_int_t bAutoDevMsg = 0, linesPerDevice = 0, numOfDevices = 0;
++#endif
+ 
+    DTI_MemSet(&AgentStartupSettingsXDevs, 0x00, sizeof(DTI_AgentStartupSettingsXDevs_t));
+ 
+@@ -223,10 +226,6 @@ DTI_STATIC IFX_int_t DTI_agent(
+       AgentStartupSettingsXDevs.serverIpAddr[15] = '\0';
+    }
+ 
+-   numOfDevices   = (DTI_opArguments.devices.bSet == IFX_TRUE) ? DTI_opArguments.devices.intValue : 0;
+-   linesPerDevice = (DTI_opArguments.linesPerDevice.bSet == IFX_TRUE) ? DTI_opArguments.linesPerDevice.intValue : 0;
+-   bAutoDevMsg    = (DTI_opArguments.devAutoMsg.bSet == IFX_TRUE) ? DTI_opArguments.devAutoMsg.intValue : 0;
+-
+ #if defined(DEVICE_GENERIC)
+    if (devIfNum < DTI_MAX_DEVICE_INTERFACES)
+    {
+@@ -239,6 +238,12 @@ DTI_STATIC IFX_int_t DTI_agent(
+          linesPerDevice = 1;
+          bAutoDevMsg    = 0;
+       }
++      else
++      {
++         numOfDevices   = (DTI_opArguments.devices.bSet == IFX_TRUE) ? DTI_opArguments.devices.intValue : 0;
++         linesPerDevice = (DTI_opArguments.linesPerDevice.bSet == IFX_TRUE) ? DTI_opArguments.linesPerDevice.intValue : 0;
++         bAutoDevMsg    = (DTI_opArguments.devAutoMsg.bSet == IFX_TRUE) ? DTI_opArguments.devAutoMsg.intValue : 0;
++      }
+ 
+       if ( (pDeviceAccessFct != IFX_NULL) &&
+            (numOfDevices > 0) && (linesPerDevice > 0) )
