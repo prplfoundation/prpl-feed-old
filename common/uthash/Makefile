@@ -1,11 +1,3 @@
-#
-# Copyright (C) 2014 OpenWrt.org
-# Copyright (C) 2014 lantiq.com
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=uthash
@@ -30,25 +22,15 @@ define Package/uthash/description
  This package contains the uthash library
 endef
 
-define Build/Configure
-
-endef
-
-define Build/Compile
-
-endef
-
-define Build/Clean
-
-endef
+Build/Configure=
+Build/Compile=
+Build/Clean=
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include/
 	$(CP) $(PKG_BUILD_DIR)/*.h $(1)/usr/include/
 endef
 
-define Package/uthash/install
-
-endef
+Package/uthash/install=
 
 $(eval $(call BuildPackage,uthash))

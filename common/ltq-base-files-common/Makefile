@@ -1,10 +1,3 @@
-#
-# Copyright (C) 2009 OpenWrt.org
-# Copyright (C) 2011 lantiq.com
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ltq-base-files-common
@@ -12,29 +5,26 @@ PKG_RELEASE:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/ltq-base-files-common
   SUBMENU:=Base Files
   SECTION:=base
-  CATEGORY:=Lantiq
+  CATEGORY:=Intel
   TITLE:=Common files for Lantiq systems
   URL:=http://www.lantiq.com/
-  MAINTAINER:=Lantiq
+  MAINTAINER:=Intel
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/ltq-base-files-common/description
  This package contains files and system scripts for OpenWrt,
  common for all Lantiq targets.
 endef
 
-define Build/Prepare
-endef
+Build/Prepare=
+Build/Compile=
 
-define Build/Compile
-endef
-
-define Package/$(PKG_NAME)/install
+define Package/ltq-base-files-common/install
 	$(CP) ./files/* $(1)/
 	$(SED) 's,$$$$R,$(REVISION),g' $(1)/etc/banner
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,ltq-base-files-common))

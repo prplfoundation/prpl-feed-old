@@ -1,17 +1,9 @@
-#
-# Copyright (C) 2008 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=u-boot
 PKG_VERSION:=1.1.5
 PKG_RELEASE:=0
-
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=ftp://ftp.denx.de/pub/u-boot
@@ -50,9 +42,7 @@ UBOOT_MAKE_OPTS:=\
 	PLATFORM_CPU=4kc \
 	IFX_CFLAGS="$(UBOOT_CFLAGS)" \
 	UBOOT_RAM_TEXT_BASE=$(IFX_UBOOT_RAM_TEXT_BASE) \
-	CPU_TYPE=$(IFX_CONFIG_CPU) \
-
-#	BOOTSTRAP_PRINTF_STATUS=BOOTSTRAP_PRINTF_ENABLED 
+	CPU_TYPE=$(IFX_CONFIG_CPU)
 
 define Build/Configure
 	$(MAKE) -C $(PKG_BUILD_DIR) \

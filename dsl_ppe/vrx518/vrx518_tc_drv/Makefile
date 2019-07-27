@@ -4,9 +4,6 @@ include $(INCLUDE_DIR)/kernel.mk
 PKG_NAME:=vrx518_tc_drv
 PKG_SOURCE_VERSION:=1.1.1
 PKG_RELEASE:=1
-
-PKG_IS_KERNEL_MODULE=y
-
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/prplfoundation/intel_vrx518_tc_drv.git
 PKG_BASE_NAME:=vrx518_tc
@@ -22,7 +19,7 @@ else
     PLAT_DIR:=dcdp
 endif
 
-define KernelPackage/$(PKG_NAME)
+define KernelPackage/vrx518_tc_drv
   SUBMENU:=Intel
   TITLE:=VRX518 TC driver
   KCONFIG:= \
@@ -45,7 +42,7 @@ endif
   MENU:=1
 endef
 
-define KernelPackage/$(PKG_NAME)/description
+define KernelPackage/vrx518_tc_drv/description
   VRX518 TC Driver
 endef
 
@@ -69,12 +66,9 @@ define KernelPackage/vrx518_ep/description
   VRX518 endpoint driver
 endef
 
-### Menuconfig #############################
-define Package/kmod-$(PKG_NAME)/config
-$(call Package/kmod-$(PKG_NAME)/override_version)
-$(call Package/kmod-$(PKG_NAME)/override_source_path)
-config $(PKG_NAME_PREF)$(PKG_NAME)_FEATURE_SELECT_CPUPATH
-  depends on PACKAGE_$(PKG_NAME_PREF)$(PKG_NAME)
+define Package/kmod-vrx518_tc_drv/config
+config vrx518_tc_drv_FEATURE_SELECT_CPUPATH
+  depends on PACKAGE_vrx518_tc_drv
   bool "Select CPU Path"
   default n
   ---help---
@@ -82,18 +76,17 @@ config $(PKG_NAME_PREF)$(PKG_NAME)_FEATURE_SELECT_CPUPATH
     and works on any platform.
 endef
 
-### CFLAGS #############################
 MAKE_OPTS := $(if $(CONFIG_TARGET_lantiq_xrx500),FEATURE_VRX518_GRX500=y) \
 			$(if $(CONFIG_TARGET_intel_mips_xrx500),FEATURE_VRX518_GRX500=y) \
 	     $(if $(CONFIG_PACKAGE_kmod-directconnect_dp),FEATURE_VRX518_DC_DP=y) \
-	     $(if $(CONFIG_kmod-$(PKG_NAME)_FEATURE_SELECT_CPUPATH),FEATURE_VRX518_CPU=y)
+	     $(if $(CONFIG_kmod-vrx518_tc_drv_FEATURE_SELECT_CPUPATH),FEATURE_VRX518_CPU=y)
 
 include $(INCLUDE_DIR)/kernel-defaults.mk
 
 define Build/Prepare
 	$(call Build/Prepare/Default)
-	#$(if $(CONFIG_$(PKG_NAME)_USE_CUSTOM_SOURCE_DIR),,$(CP) -L ./src/* $(PKG_BUILD_DIR)/)
-	#$(if $(CONFIG_$(PKG_NAME)_USE_CUSTOM_SOURCE_DIR),,$(CP) -L ./* $(PKG_BUILD_DIR)/)
+	#$(if $(CONFIG_vrx518_tc_drv_USE_CUSTOM_SOURCE_DIR),,$(CP) -L ./src/* $(PKG_BUILD_DIR)/)
+	#$(if $(CONFIG_vrx518_tc_drv_USE_CUSTOM_SOURCE_DIR),,$(CP) -L ./* $(PKG_BUILD_DIR)/)
 endef
 
 define Build/InstallDev
@@ -114,14 +107,5 @@ define Build/Clean
 	fi
 endef
 
-#define KernelPackage/$(PKG_NAME)/install
-#	@echo "+++++$(1)+++++"
-#	@echo "+++++$(PKG_BUILD_DIR)++++"
-#	@echo "+++++$(MODULES_SUBDIR)+++++"
-#	$(INSTALL_DIR) $(1)/$(MODULES_SUBDIR)
-#	$(CP) $(PKG_BUILD_DIR)/$(PLAT_DIR)/$(PKG_BASE_NAME).ko $(1)/$(MODULES_SUBDIR)
-#endef
-
-
 $(eval $(call KernelPackage,vrx518_ep))
-$(eval $(call KernelPackage,$(PKG_NAME)))
+$(eval $(call KernelPackage,vrx518_tc_drv))

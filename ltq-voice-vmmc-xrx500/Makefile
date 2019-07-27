@@ -1,53 +1,36 @@
-#
-# Copyright (C) 2008 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=ltq-voice-vmmc-xrx500
 PKG_VERSION:=1.24.0.0
-PKG_MD5SUM:=3101d368cf511401b9cbb829641e2d0d
+PKG_HASH:=6e47387545d96fd792b9424bafcb6ca1f56114a853f619ac5509edff5233d30a
 PKG_RELEASE:=1
 PKG_SOURCE:=drv_vmmc_xrx500-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://localhost
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/drv_vmmc_xrx500-$(PKG_VERSION)
-PKG_START_SCRIPT:=load_voice_vmmc.sh
-PKG_BUILD_DEPENDS:=ifxos ltq-voice-tapi \
-                   PACKAGE_ltq-evtlog:ltq-evtlog
+PKG_BUILD_DEPENDS:=ifxos ltq-voice-tapi PACKAGE_ltq-evtlog:ltq-evtlog
 
-# Add dependencies on symbols in the configure file
 PKG_CONFIG_DEPENDS:=\
 	$(foreach _mr,$(shell grep -w config config/Config.in|awk '{ print $$2 }'),CONFIG_$(_mr))
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
-  SECTION:=driver
-  CATEGORY:=Intel
+define Package/ltq-voice-vmmc-xrx500
   SUBMENU:=Voice Subsystem
   TITLE:=TAPI LL driver for Voice Macro on xRX500
   URL:=http://www.intel.com/
   MAINTAINER:=Intel Corporation
-  DEPENDS:=ltq-voice-tapi +kmod-ifxos
+  DEPENDS:=+ltq-voice-tapi +kmod-ifxos
   MENU:=1
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/ltq-voice-vmmc-xrx500/description
 	Voice Subsystem Low Level Driver for XWAY(TM) xRX500 family devices
 endef
 
-define Package/$(PKG_NAME)/config
-$(call Package/$(PKG_NAME)/override_version)
-$(call Package/$(PKG_NAME)/override_source_path)
+define Package/ltq-voice-vmmc-xrx500/config
 	source "$(SOURCE)/config/Config.in"
 endef
-
-
-# Add user specified CFLAGS and configure options
 
 ifneq ($(CONFIG_LTQ_VOICE_VMMC_USER_FLAGS),"")
 VMMC_CFLAGS=$(strip $(subst ",, $(CONFIG_LTQ_VOICE_VMMC_USER_FLAGS)))
@@ -57,20 +40,15 @@ ifneq ($(CONFIG_LTQ_VOICE_VMMC_USER_OPTIONS),"")
 CONFIGURE_ARGS += $(subst ",, $(CONFIG_LTQ_VOICE_VMMC_USER_OPTIONS))
 endif
 
-# Debugging support
 ifeq ($(CONFIG_LTQ_VOICE_VMMC_DEBUGGING),y)
 CONFIGURE_ARGS += --enable-debug \
                   --enable-warnings
 VMMC_CFLAGS += -O0
 endif
 
-# put CFLAGS on the configure line
 ifneq ($(VMMC_CFLAGS),"")
 CONFIGURE_ARGS += --with-cflags="$(VMMC_CFLAGS)"
 endif
-
-
-# Options specific for TAPI-LL VMMC configuration
 
 ifeq ($(CONFIG_LTQ_VOICE_VMMC_RTCP_XR),y)
 CONFIGURE_ARGS += --enable-rtcp-xr
@@ -94,12 +72,7 @@ else
 CONFIGURE_ARGS += --disable-fxo-act
 endif
 
-
-# configure options derived from TAPI configuration
-
 ifeq ($(CONFIG_LTQ_VOICE_TAPI_FAX),y)
-# it should be save to enable-t38 for all platforms here, the configure/driver
-# will ignore the --enable-t38 on older platforms
 CONFIGURE_ARGS += --enable-fax --enable-t38
 endif
 
@@ -216,12 +189,9 @@ CONFIGURE_ARGS += --with-kernel-incl="$(LINUX_DIR)/include"
 CONFIGURE_ARGS += --with-tapi-incl="$(DRV_TAPI_INCLUDE)"
 CONFIGURE_ARGS += --with-ifxos-incl=$(STAGING_DIR)/usr/include/ifxos
 
-ifneq ($(CONFIG_LINUX_2_4),y)
 CONFIGURE_ARGS += --enable-linux-26 --with-kernel-build="$(LINUX_DIR)" ARCH=$(LINUX_KARCH)
 CONFIGURE_ARGS += --enable-linux-platform-driver
 PKG_MODULE_EXTENSION=.$(LINUX_KMOD_SUFFIX)
-endif
-
 
 define Build/Configure
 	rm -f $(PKG_BUILD_DIR)/.configured*
@@ -239,19 +209,10 @@ define Build/UninstallDev
 	rm -rf $(BUILD_DIR)/drv_vmmc
 endef
 
-define Build/Clean
-	@- [ -e $(PKG_BUILD_DIR)/ipkg ] && rm -Rf $(PKG_BUILD_DIR)/ipkg
-	@- [ -e $(PKG_BUILD_DIR)/Makefile ] && $(MAKE) -C $(PKG_BUILD_DIR) clean
-	$(call Build/Clean/Default)
-endef
-
-define Package/$(PKG_NAME)/install
-	# Startup script
-	$(INSTALL_DIR) $(1)/etc/init.d
+define Package/ltq-voice-vmmc-xrx500/install
+	$(INSTALL_DIR) $(1)/etc/init.d $(1)/$(MODULES_SUBDIR)
 	$(INSTALL_BIN) ./files/$(PKG_START_SCRIPT) $(1)/etc/init.d/
-	# Install the driver binary
-	$(INSTALL_DIR) $(1)/$(MODULES_SUBDIR)
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/drv_vmmc$(PKG_MODULE_EXTENSION) $(1)/$(MODULES_SUBDIR)
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,ltq-voice-vmmc-xrx500))

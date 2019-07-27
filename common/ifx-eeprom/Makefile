@@ -1,10 +1,3 @@
-#
-# Copyright (C) 2009 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ifx-eeprom
@@ -16,26 +9,24 @@ PKG_RELEASE:=1
 PKG_BUILD_DEPENDS:=lib_ifxos ifx-spi
 PKG_SOURCE_URL:=http://localhost
 
-IFX_BIN_DIR=opt/ifx/bin
-
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/ifx-eeprom
   SECTION:=driver
-  CATEGORY:=Lantiq
+  CATEGORY:=Intel
   TITLE:=EEPROM manipulating
   URL:=http://www.lantiq.com/
-  MAINTAINER:=Lantiq
+  MAINTAINER:=Intel
   DEPENDS:=+kmod-ifxos ifx-spi
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/ifx-eeprom/description
 	EEPROM manipulating application
 endef
 
 CONFIGURE_ARGS += \
 	--enable-ifxos-include="-I$(STAGING_DIR)/usr/include/ifxos" \
-	--enable-ifxos-library="-L$(STAGING_DIR)/usr/lib" 
+	--enable-ifxos-library="-L$(STAGING_DIR)/usr/lib"
 
 CONFIGURE_ARGS += --enable-debug --enable-warnings
 
@@ -43,9 +34,9 @@ define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include
 endef
 
-define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/$(IFX_BIN_DIR)
+define Package/ifx-eeprom/install
+	$(INSTALL_DIR) $(1)/opt/ifx/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/eeprom $(1)/opt/ifx/bin
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,ifx-eeprom))

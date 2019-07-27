@@ -15,38 +15,32 @@ PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/sl-dsl-cpe
   SECTION:=utils
-  CATEGORY:=Lantiq
+  CATEGORY:=Intel
   SUBMENU:=DSL Subsystem
-  TITLE:=Lantiq Network Manager
+  TITLE:=Intel Network Manager
   URL:=http://www.lantiq.com
-  MAINTAINER:=Lantiq Beteiligungs-GmbH & Co. KG
+  MAINTAINER:=Intel Beteiligungs-GmbH & Co. KG
   DEPENDS:= +libugwhelper +libcal +csd +servd +polld +dsl-cpe-fapi +system_fapi +ltq-config_common_features:ltq-config_common_features
   MENU:=1
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/sl-dsl-cpe/description
 	Lantiq SL function for DSL Service
 endef
 
-### Menuconfig ##################################
-define Package/$(PKG_NAME)/config
-    $(call Package/$(PKG_NAME)/override_version)
-    $(call Package/$(PKG_NAME)/override_source_path)
-    $(call Package/$(PKG_NAME)/config_debug_level)
-
+define Package/sl-dsl-cpe/config
 	config sl-dsl-cpe_TC_SWITCHOVER_WITHOUT_REBOOT
 		bool "TC switchover without reboot in puma"
 		depends on TARGET_x86 || TARGET_lantiq_xrx330
-		depends on PACKAGE_$(PKG_NAME)
+		depends on PACKAGE_sl-dsl-cpe
 		default y
 endef
 
 ifeq ($(CONFIG_sl-dsl-cpe_TC_SWITCHOVER_WITHOUT_REBOOT),y)
 TARGET_CFLAGS+= -DSWITCHOVER_WITHOUT_REBOOT
 endif
-
 ifeq ($(CONFIG_PACKAGE_kmod-vrx518-dp-mod),y)
 TARGET_CFLAGS+= -DCONFIG_VRX318_VRX518
 else ifeq ($(CONFIG_PACKAGE_kmod-vrx518_tc_drv),y)
@@ -54,9 +48,7 @@ TARGET_CFLAGS+= -DCONFIG_VRX318_VRX518
 else ifeq ($(CONFIG_PACKAGE_kmod-vrx318-dp-mod),y)
 TARGET_CFLAGS+= -DCONFIG_VRX318_VRX518
 endif
-
 TARGET_CFLAGS += -I$(LINUX_DIR)/user_headers/include/net/ -I$(LINUX_DIR)/user_headers/include/ -I$(LINUX_DIR)/include/
-
 ifeq ($(CONFIG_USE_MUSL),y)
 TARGET_CFLAGS += -DCONFIG_USE_MUSL
 endif
@@ -69,15 +61,8 @@ CONFIGURE_ARGS += \
 	--enable-system-fapi-include="-I$(STAGING_DIR)/usr/include/system_fapi"
 
 define Build/Configure
-	# remove "configured" stamps of other configs
 	@- rm $(PKG_BUILD_DIR)/.configured*
 	$(call Build/Configure/Default)
-endef
-
-define Build/Clean
-	@- rm -Rf $(PKG_BUILD_DIR)/ipkg*
-	@- [ -e $(PKG_BUILD_DIR)/Makefile ] && $(MAKE) -C $(PKG_BUILD_DIR) clean
-	$(call Build/Clean/Default)
 endef
 
 define Build/InstallDev
@@ -85,7 +70,7 @@ define Build/InstallDev
 	$(INSTALL_DATA) ./files/db_xml/DSL_*.xml $(1)/xml/	
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/sl-dsl-cpe/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	cd $(1)/usr/lib && rm -f "libdslsl.so.0" && ln -s "../../$(VENDOR_PATH)/servd/lib/libdslsl.so" "libdslsl.so.0"
 
@@ -118,4 +103,4 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) ./files/cli/*.map $(1)/$(VENDOR_PATH)/cli/map-files/
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,sl-dsl-cpe))

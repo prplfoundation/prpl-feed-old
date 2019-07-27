@@ -1,10 +1,3 @@
-#
-# Copyright (C) 2017 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
@@ -28,53 +21,41 @@ PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
 
-#get firmware relase step
 ifneq ($(CONFIG_UBOOT_CONFIG_FIRMWARE_IN_ROOTFS)$(CONFIG_dsl-cpe-mei-vrx_DEVICE_VR10_320),)
 FIRMWARE_BIN=$(1)/lib/firmware
 else
 FIRMWARE_BIN=$(STAGING_DIR)/firmware/
 endif
 
-
-# get config values from general image config or other packages in dependency list
-# Definition of these values will be overtaken from package 'dsl-cpe-mei-vrx'
 DSL_NETLINK_ID=$(strip $(subst ",, $(CONFIG_dsl-cpe-mei-vrx_DSL_NETLINK_ID)))
 
 ifeq ($(DSL_NETLINK_ID),)
 	DSL_NETLINK_ID=28
 endif
 
-ifeq ($(DUMP),)
-	STAMP_CONFIGURED:=$(strip $(STAMP_CONFIGURED))_$(shell $(SH_FUNC) ( \
-		grep '^CONFIG_$(PKG_NAME)' $(TOPDIR)/.config; \
-		grep '^CONFIG_$(PKG_NAME)_DTM_' $(TOPDIR)/.config; \
-		grep '^CONFIG_VRX_' $(TOPDIR)/.config) | md5s)
-endif
-
-define Package/$(PKG_NAME)
+define Package/dsl-cpe-api-vrx
 	SECTION:=driver
 	CATEGORY:=Intel
 	SUBMENU:=DSL Subsystem
 	TITLE:=DSL CPE API driver for VRX Family
 	URL:=http://www.intel.com/
 	MAINTAINER:=Intel Corporation
-	DEPENDS:=+dsl-cpe-mei-vrx \
-		+kmod-dsl-cpe-api-vrx
+	DEPENDS:=+dsl-cpe-mei-vrx +kmod-dsl-cpe-api-vrx
 	MENU:=1
 endef
 
-define KernelPackage/$(PKG_NAME)
-	SUBMENU:=Lantiq
+define KernelPackage/dsl-cpe-api-vrx
+	SUBMENU:=Intel
 	TITLE:=DSL CPE API driver for VRX Family
 	URL:=http://www.lantiq.com/
-	MAINTAINER:=Lantiq Beteiligungs-GmbH & Co. KG
+	MAINTAINER:=Intel Beteiligungs-GmbH & Co. KG
 	DEPENDS:=+kmod-dsl-cpe-mei-vrx
 	KCONFIG:=CONFIG_LTQ_DSL_CPE_API_VRX=y
 	FILES:=$(PKG_BUILD_DIR)/src/drv_dsl_cpe_api$(PKG_MODULE_EXTENSION)
 	AUTOLOAD:=$(call AutoLoad,45,drv_dsl_cpe_api)
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/dsl-cpe-api-vrx/description
 	This package contains the Intel DSL CPE API driver.
 
 	Supported Devices:
@@ -83,13 +64,13 @@ define Package/$(PKG_NAME)/description
 		- VRX500 Family
 endef
 
-define Package/$(PKG_NAME)/config
-$(call Package/$(PKG_NAME)/override_version)
-$(call Package/$(PKG_NAME)/override_source_path)
+define Package/dsl-cpe-api-vrx/config
+$(call Package/dsl-cpe-api-vrx/override_version)
+$(call Package/dsl-cpe-api-vrx/override_source_path)
 source "$(SOURCE)/Config.in"
 endef
 
-define KernelPackage/$(PKG_NAME)/description
+define KernelPackage/dsl-cpe-api-vrx/description
 	Intel DSL CPE API Kernel Module Driver
 endef
 
@@ -126,19 +107,19 @@ CONFIGURE_ARGS += --enable-vrx-device=vr9
 CONFIGURE_ARGS += --enable-firmware-r9
 endif
 
-ifeq ($(CONFIG_$(PKG_NAME)_MODEL_LITE),y)
+ifeq ($(CONFIG_dsl-cpe-api-vrx_MODEL_LITE),y)
 	CONFIGURE_ARGS += --enable-model=lite
 	DRV_BILD_MODEL="lite"
-else ifeq ($(CONFIG_$(PKG_NAME)_MODEL_FOOTPRINT),y)
+else ifeq ($(CONFIG_dsl-cpe-api-vrx_MODEL_FOOTPRINT),y)
 	CONFIGURE_ARGS += --enable-model=footprint
 	DRV_BILD_MODEL="footprint"
-else ifeq ($(CONFIG_$(PKG_NAME)_MODEL_TYPICAL),y)
+else ifeq ($(CONFIG_dsl-cpe-api-vrx_MODEL_TYPICAL),y)
 	CONFIGURE_ARGS += --enable-model=typical
 	DRV_BILD_MODEL="typical"
-else ifeq ($(CONFIG_$(PKG_NAME)_MODEL_FULL),y)
+else ifeq ($(CONFIG_dsl-cpe-api-vrx_MODEL_FULL),y)
 	CONFIGURE_ARGS += --enable-model=full
 	DRV_BILD_MODEL="full"
-else ifeq ($(CONFIG_$(PKG_NAME)_MODEL_DEBUG),y)
+else ifeq ($(CONFIG_dsl-cpe-api-vrx_MODEL_DEBUG),y)
 	CONFIGURE_ARGS += --enable-model=debug
 	DRV_BILD_MODEL="debug"
 else
@@ -146,12 +127,12 @@ else
 	DRV_BILD_MODEL="footprint"
 endif
 
-ifeq ($(CONFIG_$(PKG_NAME)_USE_ADDITIONAL_BUILD_OPTIONS),y)
-	CONFIGURE_ARGS += $(CONFIG_$(PKG_NAME)_ADDITIONAL_BUILD_OPTIONS)
+ifeq ($(CONFIG_dsl-cpe-api-vrx_USE_ADDITIONAL_BUILD_OPTIONS),y)
+	CONFIGURE_ARGS += $(CONFIG_dsl-cpe-api-vrx_ADDITIONAL_BUILD_OPTIONS)
 endif
 
-ifeq ($(CONFIG_$(PKG_NAME)_USE_DSL_ADD_EXT_DRV_CFLAGS),y)
-	API_DRV_CFLAGS += $(CONFIG_$(PKG_NAME)_DSL_ADD_EXT_DRV_CFLAGS)
+ifeq ($(CONFIG_dsl-cpe-api-vrx_USE_DSL_ADD_EXT_DRV_CFLAGS),y)
+	API_DRV_CFLAGS += $(CONFIG_dsl-cpe-api-vrx_DSL_ADD_EXT_DRV_CFLAGS)
 endif
 
 ifeq ($(CONFIG_dsl-cpe-mei-vrx_PPA_NO),y)
@@ -164,34 +145,19 @@ API_DRV_CFLAGS += -I$(STAGING_DIR)/include
 
 CONFIGURE_ARGS += --enable-add_ext_drv_cflags="${API_DRV_CFLAGS}"
 
-#ifeq ($(CONFIG_LINUX_2_6),y)
-	CONFIGURE_ARGS += --enable-linux-26 --enable-kernelbuild="$(LINUX_DIR)" ARCH=$(LINUX_KARCH)
-	PKG_MODULE_EXTENSION=.ko
-#endif
+CONFIGURE_ARGS += --enable-linux-26 --enable-kernelbuild="$(LINUX_DIR)" ARCH=$(LINUX_KARCH)
+PKG_MODULE_EXTENSION=.ko
 
 ifeq ($(CONFIG_mips),y)
 	EXTRA_CFLAGS = -fno-pic -mno-abicalls -mlong-calls -G 0
 endif
-
-define Build/Configure
-	# remove "configured" stamps of other configs
-	@- rm $(PKG_BUILD_DIR)/.configured*
-	$(call Build/Configure/Default)
-endef
-
-define Build/Clean
-	@- rm -Rf $(PKG_BUILD_DIR)/ipkg*
-	@- [ -e $(PKG_BUILD_DIR)/Makefile ] && $(MAKE) -C $(PKG_BUILD_DIR) clean
-	$(call Build/Clean/Default)
-endef
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include/drv_dsl_cpe_api
 	$(CP) $(PKG_BUILD_DIR)/src/include/drv_dsl_cpe*.h $(1)/usr/include/drv_dsl_cpe_api/
 endef
 
-define Package/$(PKG_NAME)/install
-
+define Package/dsl-cpe-api-vrx/install
 	$(INSTALL_DIR) $(1)/$(DSL_INITD_DIR)
 
 	$(INSTALL_BIN) ./files/ltq_load_dsl_cpe_api.sh $(1)/$(DSL_INITD_DIR)
@@ -220,5 +186,5 @@ endif
 	ln -snf /$(MODULES_SUBDIR)/drv_dsl_cpe_api$(PKG_MODULE_EXTENSION) $(1)/$(DSL_BIN_DIR)/$(PKG_BASE_NAME)$(PKG_MODULE_EXTENSION)
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call KernelPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,dsl-cpe-api-vrx))
+$(eval $(call KernelPackage,dsl-cpe-api-vrx))

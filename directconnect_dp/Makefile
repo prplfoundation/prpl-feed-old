@@ -1,53 +1,38 @@
-#
-# Copyright (C) 2016 Intel Corporation
-# Copyright (C) 2016 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=directconnect-dp
 PKG_VERSION:=0.2.4.2
 PKG_RELEASE:=1
-
-PKG_IS_KERNEL_MODULE=y
-
 PKG_SOURCE_VERSION:=8bb6fbf8283cd406ccb6cc42dfe23623cd8fd1f0
 PKG_SOURCE_URL:=ssh://git@gts-chd.intel.com:29418/sw_ugw/dc_dp_drv.git
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_MIRROR:=1
 PKG_MIRROR:=0
-PKG_DEFAULT_CUSTOM_SOURCE_DIR:=/dc_dp_drv/
 
 include $(INCLUDE_DIR)/package.mk
 
-define KernelPackage/$(PKG_NAME)
+define KernelPackage/directconnect-dp
   SUBMENU:=Intel
   TITLE:=DirectConnect datapath driver
   DEPENDS:=@TARGET_intel_mips
-  KCONFIG:= \
-	CONFIG_DIRECTCONNECT_DP_API
-  FILES:= \
-	$(PKG_BUILD_DIR)/common/directconnect_datapath.ko \
+  KCONFIG:=CONFIG_DIRECTCONNECT_DP_API
+  FILES:=$(PKG_BUILD_DIR)/common/directconnect_datapath.ko \
 	$(if $(CONFIG_TARGET_intel_mips_xrx500),$(PKG_BUILD_DIR)/dc_mode/dc_mode0/dc_mode0-xrx500.ko) \
 	$(if $(CONFIG_TARGET_intel_xrx330),$(if (CONFIG_PACKAGE_kmod-vrx518_ep), \
 		$(PKG_BUILD_DIR)/dc_mode/dc_mode1/dc_mode1-xrx330.ko))
-
   AUTOLOAD:=$(call AutoProbe,directconnect_datapath dc_mode0-xrx500 dc_mode1-xrx330)
   MENU:=1
 endef
 
-define KernelPackage/$(PKG_NAME)/description
+define KernelPackage/directconnect-dp/description
   DirectConnect datapath driver
 endef
 
-define KernelPackage/$(PKG_NAME)/config
+define KernelPackage/directconnect-dp/config
   source "$(SOURCE)/config/Config.in"
-  $(call Package/kmod-$(PKG_NAME)/override_version)
-  $(call Package/kmod-$(PKG_NAME)/override_source_path)
+  $(call Package/kmod-directconnect-dp/override_version)
+  $(call Package/kmod-directconnect-dp/override_source_path)
 endef
 
 EXTRA_CFLAGS += \
@@ -57,8 +42,6 @@ EXTRA_CFLAGS += \
 	$(if $(CONFIG_TARGET_intel_mips_xrx500), \
 		-DHAVE_DATAPATH_API \
 	)
-	
-	
 
 export CONFIG_DIRECTCONNECT_DP_LITEPATH=y
 export CONFIG_SW_DCMODE1_BUILTIN=y
@@ -96,11 +79,4 @@ define Build/Compile
 		modules
 endef
 
-define Build/Clean
-	if [ -d $(PKG_BUILD_DIR) ]; then \
-		$(MAKE) -C $(PKG_BUILD_DIR) KERNEL_DIR=$(LINUX_DIR) clean; \
-		$(RM) -r $(PKG_BUILD_DIR)/ipkg-$(BOARD); \
-	fi
-endef
-
-$(eval $(call KernelPackage,$(PKG_NAME)))
+$(eval $(call KernelPackage,directconnect-dp))

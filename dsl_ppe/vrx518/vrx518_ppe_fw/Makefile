@@ -4,12 +4,12 @@ PKG_NAME:=vrx518_ppe_fw
 PKG_VERSION:=1.3.7
 PKG_MD5SUM:=fc89a7f58334b402212289b705665671
 PKG_RELEASE:=1
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE:=vrx518_ppe_fw-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://mts-chd.intel.com/~wlnsw/dist/
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/vrx518_ppe_fw
   SECTION:=firmware  
   SUBMENU:=Intel
   TITLE:=VRX518 PPE firmware
@@ -18,14 +18,13 @@ define Package/$(PKG_NAME)
   MENU:=1
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/vrx518_ppe_fw/description
 	VRX518 PPE firmware
 endef
 
-define Build/Compile
-endef
+Build/Compile=
 
-define Package/$(PKG_NAME)/install
+define Package/vrx518_ppe_fw/install
 	$(INSTALL_DIR) $(1)/lib/firmware
 
 ifeq ($(CONFIG_TARGET_lantiq_xrx330),y)
@@ -42,4 +41,4 @@ ifeq ($(CONFIG_TARGET_x86_puma),y)
 endif
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,vrx518_ppe_fw))

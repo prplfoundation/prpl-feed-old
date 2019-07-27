@@ -1,10 +1,3 @@
-#
-# Copyright (C) 2008 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
@@ -15,21 +8,20 @@ PKG_RELEASE:=1
 PKG_BASE_NAME:=drv_tapi
 PKG_SOURCE:=$(PKG_BASE_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://localhost
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)/$(PKG_BASE_NAME)-$(PKG_VERSION)
+PKG_BUILD_DIR:=$(BUILD_DIR)/ltq-voice-tapi/$(PKG_BASE_NAME)-$(PKG_VERSION)
 PKG_START_SCRIPT:=load_voice_tapi.sh
 PKG_BUILD_DEPENDS:=ifxos \
                    PACKAGE_ltq-evtlog:ltq-evtlog \
                    PACKAGE_kmod-libsrtp-km:libsrtp-km
 PKG_USE_MIPS16:=0
 
-# Add dependencies on symbols in the configure file
 PKG_CONFIG_DEPENDS:=\
         $(foreach _mr,$(shell grep -w config config/Config.in|awk '{ print $$2 }'),CONFIG_$(_mr)) \
         CONFIG_PACKAGE_kmod-lantiq-cpufreq
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/ltq-voice-tapi
   SECTION:=driver
   CATEGORY:=Intel
   SUBMENU:=Voice Subsystem
@@ -40,21 +32,15 @@ define Package/$(PKG_NAME)
   DEPENDS:=+kmod-ifxos +kmod-voice-tapi
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/ltq-voice-tapi/description
 	Voice Subsystem Telephony API High Level Driver
 endef
 
-define Package/$(PKG_NAME)/config
-$(call Package/$(PKG_NAME)/override_version)
-$(call Package/$(PKG_NAME)/override_source_path)
+define Package/ltq-voice-tapi/config
 	source "$(SOURCE)/config/Config.in"
 endef
 
-# Set TAPI API interface version
 CONFIGURE_ARGS += --enable-tapi3
-
-
-# Add user specified CFLAGS and configure options
 
 ifneq ($(CONFIG_LTQ_VOICE_TAPI_USER_FLAGS),"")
 TAPI_CFLAGS=$(strip $(subst ",, $(CONFIG_LTQ_VOICE_TAPI_USER_FLAGS)))
@@ -64,20 +50,16 @@ ifneq ($(CONFIG_LTQ_VOICE_TAPI_USER_OPTIONS),"")
 CONFIGURE_ARGS += $(subst ",, $(CONFIG_LTQ_VOICE_TAPI_USER_OPTIONS))
 endif
 
-# Debugging support
 ifeq ($(CONFIG_LTQ_VOICE_TAPI_DEBUGGING),y)
 CONFIGURE_ARGS += --enable-debug \
                   --enable-warnings
 TAPI_CFLAGS += -O0
 endif
 
-# put CFLAGS on the configure line
 ifneq ($(TAPI_CFLAGS),"")
 CONFIGURE_ARGS += --with-cflags="$(TAPI_CFLAGS)"
 endif
 
-
-# Configuration Options
 ifeq ($(CONFIG_TARGET_intel_mips_xrx500)$(CONFIG_TARGET_lantiq_xrx500),y)
 CONFIGURE_ARGS += --with-linux-alloc
 endif
@@ -92,9 +74,6 @@ CONFIGURE_ARGS += --disable-pmc
 CONFIGURE_ARGS += --disable-pmc-if
 endif
 
-
-
-# Fixed options for TAPI V3 API
 CONFIGURE_ARGS += --enable-voice \
                   --enable-packet \
                   --enable-hsm \
@@ -114,11 +93,8 @@ endif
 ifeq ($(CONFIG_LTQ_VOICE_TAPI_SRTP),y)
 CONFIGURE_ARGS += --with-srtp-incl=$(STAGING_DIR)/usr/include/srtp-km
 endif
-
-ifneq ($(CONFIG_LINUX_2_4),y)
 CONFIGURE_ARGS += --enable-linux-26 --with-kernel-build="$(LINUX_DIR)" ARCH=$(LINUX_KARCH)
 PKG_MODULE_EXTENSION=.$(LINUX_KMOD_SUFFIX)
-endif
 
 CONFIGURE_ARGS += \
 	--enable-tapi3 \
@@ -142,12 +118,6 @@ CONFIGURE_ARGS += \
 	$(call autoconf_bool,CONFIG_LTQ_VOICE_TAPI_TRACES,trace) \
 	$(call autoconf_bool,CONFIG_LTQ_VOICE_TAPI_HOTPLUG,hotplug)
 
-define Build/Configure
-	rm -f $(PKG_BUILD_DIR)/.configured*
-	$(call Build/Configure/Default)
-endef
-
-
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include
 	mkdir -p $(1)/usr/include/drv_tapi
@@ -159,14 +129,8 @@ define Build/UninstallDev
 	rm -rf $(BUILD_DIR)/drv_tapi
 endef
 
-define Build/Clean
-	@- [ -e $(PKG_BUILD_DIR)/ipkg ] && rm -Rf $(PKG_BUILD_DIR)/ipkg
-	@- [ -e $(PKG_BUILD_DIR)/Makefile ] && $(MAKE) -C $(PKG_BUILD_DIR) clean
-	$(call Build/Clean/Default)
-endef
-
 ifneq ($(CONFIG_LTQ_VOICE_VMMC_WITH_DEVICE_FALCON),y)
-define Package/$(PKG_NAME)/install
+define Package/ltq-voice-tapi/install
 	# Startup script
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/$(PKG_START_SCRIPT) $(1)/etc/init.d/
@@ -210,4 +174,4 @@ endif
 endef
 
 $(eval $(call KernelPackage,voice-tapi))
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,ltq-voice-tapi))

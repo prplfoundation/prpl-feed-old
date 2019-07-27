@@ -1,11 +1,3 @@
-#
-# Copyright (C) 2010 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-# $Id: $
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ifx-lib-tf
@@ -16,30 +8,23 @@ PKG_SOURCE_DIR:=$(BUILD_DIR)/$(PKG_BASE_NAME)-$(PKG_VERSION)
 PKG_BUILD_DIR:=$(PKG_SOURCE_DIR)
 PKG_RELEASE:=1
 PKG_SOURCE_URL:=http://localhost
-#PKG_MD5SUM:=
 PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
 
-ifeq ($(DUMP),)
-	STAMP_CONFIGURED:=$(strip $(STAMP_CONFIGURED))_$(shell $(SH_FUNC) grep '^CONFIG_PACKAGE_lib-dti' $(TOPDIR)/.config | md5s)
-endif
-
-define Package/$(PKG_NAME)
+define Package/ifx-lib-tf
   SECTION:=libs
-  CATEGORY:=Lantiq
-  TITLE:=Lantiq Test Framework library
+  CATEGORY:=Intel
+  TITLE:=Intel Test Framework library
   URL:=http://www.Lantiq.com/
-  MAINTAINER:=Lantiq Deutschland GmbH
+  MAINTAINER:=Intel Deutschland GmbH
   DEPENDS:=+libpthread +ifxos
   MENU:=1
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/ifx-lib-tf/description
 	This library will be used by some Lantiq applications.
 endef
-
-#CONFIGURE_VARS += CC="$(TARGET_CROSS)gcc"
 
 CONFIGURE_ARGS += \
 	--enable-warnings \
@@ -49,7 +34,6 @@ CONFIGURE_ARGS += \
 	--with-ifxos-incl=$(STAGING_DIR)/usr/include/ifxos \
 	--with-ifxos-lib=$(STAGING_DIR)/usr/lib \
 	--enable-target=$(STAGING_DIR)
-
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/{lib,include/libtf/include}
@@ -62,4 +46,4 @@ define Build/InstallDev
 	$(CP) $(PKG_BUILD_DIR)/tc_dispatch_loc/libtc_disploc.a $(1)/usr/lib/tc_dispatch_loc/libtc_disploc.a
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,ifx-lib-tf))

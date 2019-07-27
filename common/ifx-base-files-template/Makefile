@@ -1,57 +1,31 @@
-#
-# Copyright (C) 2009 OpenWrt.org
-# Copyright (C) 2009 Infineon Technologies
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-# $Id: $
-
-
-# This is a template for board-specific base files
-#
-# To create a new board specific package, do the following steps:
-#   - Set the variable IFX_BOARD_NAME to the board name.
-#     It must be in lower case because of ipkg/opkg restrictions!
-#   - Adapt the DEPENDS statement (e.g. remove @BROKEN)
-#   - !!! Delete this comment block in your Makefile !!!
-
 include $(TOPDIR)/rules.mk
 
-IFX_BOARD_NAME:=template
-
-PKG_NAME:=ifx-base-files-$(IFX_BOARD_NAME)
+PKG_NAME:=ifx-base-files-template
 PKG_RELEASE:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/ifx-base-files-template
   SUBMENU:=Base Files
   SECTION:=base
-  CATEGORY:=Lantiq
-  TITLE:=Base files for the $(IFX_BOARD_NAME) board.
+  CATEGORY:=Intel
+  TITLE:=Base files for the template board.
   URL:=http://www.lantiq.com/
-  MAINTAINER:=Lantiq
+  MAINTAINER:=Intel
   DEPENDS:=+ifx-base-files-common @BROKEN
 endef
 
-#define Package/$(PKG_NAME)/conffiles
-#endef
-
-define Package/$(PKG_NAME)/description
+define Package/ifx-base-files-template/description
  This package contains files and system scripts for OpenWrt,
- required for the $(IFX_BOARD_NAME) board.
+ required for the template board.
 endef
 
-define Build/Prepare
-endef
+Build/Prepare=
+Build/Compile=
 
-define Build/Compile
-endef
-
-define Package/$(PKG_NAME)/install
+define Package/ifx-base-files-template/install
 	[ -d ./files ] && $(CP) ./files/* $(1)/
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,ifx-base-files-template))
 

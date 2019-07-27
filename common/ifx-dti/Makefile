@@ -1,11 +1,3 @@
-#
-# Copyright (C) 2008 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-# $Id: $
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ifx-dti
@@ -25,18 +17,18 @@ PKG_BUILD_DEPENDS:=lib_ifxos \
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/ifx-dti
   SECTION:=libs
-  CATEGORY:=Lantiq
-  TITLE:=Lantiq Debug and Trace Interface
+  CATEGORY:=Intel
+  TITLE:=Intel Debug and Trace Interface
   URL:=http://www.lantiq.com/
-  MAINTAINER:=Lantiq GmbH
+  MAINTAINER:=Intel GmbH
   DEPENDS:=+libpthread +kmod-ifxos
   SUBMENU:=DTI
   MENU:=1
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/ifx-dti/description
   This library will be used by some Lantiq applications / drivers
 endef
 
@@ -86,11 +78,6 @@ CONFIGURE_ARGS += \
 	--enable-ifxos-library="-L$(STAGING_DIR)/usr/lib"\
 	--with-dti-tcp-port=9000\
 	--enable-cli
-
-define Build/Clean
-	@- [ -e $(PKG_BUILD_DIR)/Makefile ] && $(MAKE) -C $(PKG_BUILD_DIR) clean
-	$(call Build/Clean/Default)
-endef
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/{lib,include/dti}

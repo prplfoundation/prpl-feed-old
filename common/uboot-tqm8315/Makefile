@@ -1,17 +1,9 @@
-# 
-# Copyright (C) 2008 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=u-boot
 PKG_VERSION:=2009.08-rc1
 PKG_RELEASE:=1
-
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=ftp://ftp.denx.de/pub/u-boot
@@ -20,7 +12,6 @@ PKG_TARGETS:=bin
 
 include $(INCLUDE_DIR)/package.mk
 
-# UBOOT_CONFIG=$(strip $(subst ",, $(CONFIG_UBOOT_TARGET)))
 UBOOT_CONFIG:=TQM8315
 
 define Package/uboot-tqm8315
@@ -31,8 +22,6 @@ define Package/uboot-tqm8315
   URL:=http://www.denx.de/wiki/UBoot/WebHome
 endef
 
-
-# Create hardlinks for files. This will only work if this feed and the build_dir are on the same filesystem!
 ifneq ($(QUILT),)
   CP_OPTS=-l
 endif

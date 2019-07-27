@@ -1,13 +1,5 @@
-#
-# Copyright (C) 2017 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
-
 
 PKG_NAME:=dsl-cpe-control-vrx
 PKG_SOURCE_VERSION:=4.21.1
@@ -28,14 +20,7 @@ PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
 
-# Get config values from general image config or other packages in dependency list
-# Definition of these values will be overtaken from package 'dsl-cpe-mei-vrx'
-
 DSL_NETLINK_ID=$(strip $(subst ",, $(CONFIG_dsl-cpe-mei-vrx_DSL_NETLINK_ID)))
-
-ifeq ($(CONFIG_LTQ_CLI),)
-CONFIG_LTQ_CLI=y
-endif
 
 ifeq ($(DSL_NETLINK_ID),)
 	DSL_NETLINK_ID=28
@@ -43,40 +28,27 @@ endif
 
 ifeq ($(DUMP),)
 	STAMP_CONFIGURED:=$(strip $(STAMP_CONFIGURED))_$(shell $(SH_FUNC) ( \
-		grep '^CONFIG_$(PKG_NAME)' $(TOPDIR)/.config; \
+		grep '^CONFIG_dsl-cpe-control-vrx' $(TOPDIR)/.config; \
 		grep '^CONFIG_DSL_' $(TOPDIR)/.config; \
 		grep '^CONFIG_VRX_' $(TOPDIR)/.config; \
 		grep '^CONFIG_VRX320_' $(TOPDIR)/.config; \
-		grep '^CONFIG_$(PKG_NAME)_DTM_' $(TOPDIR)/.config; \
+		grep '^CONFIG_dsl-cpe-control-vrx_DTM_' $(TOPDIR)/.config; \
 		grep '^CONFIG_PTM_VECTORING' $(LINUX_DIR)/.config) | md5s)
 endif
 
-define Package/dsl-cpe-control
-	SECTION:=application
-	CATEGORY:=Intel
-	SUBMENU:=DSL Subsystem
-	TITLE:=DSL CPE control application for VRX Family
-	URL:=http://www.intel.com/
-	MAINTAINER:=Intel Corporation
-	PROVIDES:=dsl-cpe-control
-	DEPENDS:= +libugwhelper
-	MENU:=1
+define Package/dsl-cpe-control-vrx
+  SECTION:=intel
+  CATEGORY:=Intel
+  SUBMENU:=DSL Subsystem
+  TITLE:=DSL CPE control application for VRX Family
+  URL:=http://www.intel.com/
+  MAINTAINER:=Intel Corporation
+  PROVIDES:=+dsl-cpe-control
+  DEPENDS:=+libugwhelper +dsl-cpe-api-vrx +libpthread +librt +PACKAGE_safeclibs:safeclibs +dsl-cpe-control-vrx_DSL_JSON_PARSING:+libjson-c
+  MENU:=1
 endef
 
-define Package/dsl-cpe-control/description
-	Intel DSL CPE for Amazon SE, Danube,Vinax and VRx.
-endef
-
-define Package/$(PKG_NAME)
-	$(call Package/dsl-cpe-control)
-	DEPENDS:= +dsl-cpe-api-vrx +libpthread +librt +PACKAGE_safeclibs:safeclibs
-
-	ifeq ($(CONFIG_$(PKG_NAME)_DSL_JSON_PARSING),y)
-	DEPENDS += +libjson-c
-	endif
-endef
-
-define Package/$(PKG_NAME)/description
+define Package/dsl-cpe-control-vrx/description
 	This package contains the DSL CPE control application.
 
 	Supported Devices:
@@ -84,9 +56,7 @@ define Package/$(PKG_NAME)/description
 		- VRX300 Family
 endef
 
-define Package/$(PKG_NAME)/config
-$(call Package/$(PKG_NAME)/override_version)
-$(call Package/$(PKG_NAME)/override_source_path)
+define Package/dsl-cpe-control-vrx/config
 source "$(SOURCE)/Config.in"
 endef
 
@@ -115,13 +85,8 @@ else
 CONFIGURE_ARGS += --enable-dti=no
 endif
 
-ifeq ($(CONFIG_LTQ_CLI),y)
 CONFIGURE_ARGS += \
 	--enable-cli-support
-endif
-
-# Add underscore at the end to keep backward-compatibility
-MODEL_NAME += $(CONFIG_BUILD_SUFFIX)_
 
 ifeq ($(CONFIG_dsl-cpe-mei-vrx_DEVICE_VR9),y)
 	CONFIGURE_ARGS += --enable-vrx-device=vr9
@@ -135,21 +100,20 @@ else
 	CONFIGURE_ARGS += --enable-vrx-device=vr9
 endif
 
-# Default number of pipes used for CLI communication
 NUM_PIPES:=1
-ifeq ($(CONFIG_$(PKG_NAME)_MODEL_LITE),y)
+ifeq ($(CONFIG_dsl-cpe-control-vrx_MODEL_LITE),y)
 	CONFIGURE_ARGS += --enable-model=lite
 	APP_BILD_MODEL="lite"
-else ifeq ($(CONFIG_$(PKG_NAME)_MODEL_FOOTPRINT),y)
+else ifeq ($(CONFIG_dsl-cpe-control-vrx_MODEL_FOOTPRINT),y)
 	CONFIGURE_ARGS += --enable-model=footprint
 	APP_BILD_MODEL="footprint"
-else ifeq ($(CONFIG_$(PKG_NAME)_MODEL_TYPICAL),y)
+else ifeq ($(CONFIG_dsl-cpe-control-vrx_MODEL_TYPICAL),y)
 	CONFIGURE_ARGS += --enable-model=typical
 	APP_BILD_MODEL="typical"
-else ifeq ($(CONFIG_$(PKG_NAME)_MODEL_FULL),y)
+else ifeq ($(CONFIG_dsl-cpe-control-vrx_MODEL_FULL),y)
 	CONFIGURE_ARGS += --enable-model=full
 	APP_BILD_MODEL="full"
-else ifeq ($(CONFIG_$(PKG_NAME)_MODEL_DEBUG),y)
+else ifeq ($(CONFIG_dsl-cpe-control-vrx_MODEL_DEBUG),y)
 	CONFIGURE_ARGS += --enable-model=debug
 	# In case of debug compilation number of pipes is increased
 	NUM_PIPES:=2
@@ -161,12 +125,12 @@ endif
 
 CONFIGURE_ARGS += --enable-add-appl-cflags="-DMAX_CLI_PIPES=$(NUM_PIPES)"
 
-ifeq ($(CONFIG_$(PKG_NAME)_USE_ADDITIONAL_BUILD_OPTIONS),y)
-	CONFIGURE_ARGS += $(CONFIG_$(PKG_NAME)_ADDITIONAL_BUILD_OPTIONS)
+ifeq ($(CONFIG_dsl-cpe-control-vrx_USE_ADDITIONAL_BUILD_OPTIONS),y)
+	CONFIGURE_ARGS += $(CONFIG_dsl-cpe-control-vrx_ADDITIONAL_BUILD_OPTIONS)
 endif
 
-ifeq ($(CONFIG_$(PKG_NAME)_USE_DSL_ADD_EXT_APPL_CFLAGS),y)
-CONFIGURE_ARGS += --enable-add_ext_appl_cflags=$(CONFIG_$(PKG_NAME)_DSL_ADD_EXT_APPL_CFLAGS)
+ifeq ($(CONFIG_dsl-cpe-control-vrx_USE_DSL_ADD_EXT_APPL_CFLAGS),y)
+CONFIGURE_ARGS += --enable-add_ext_appl_cflags=$(CONFIG_dsl-cpe-control-vrx_DSL_ADD_EXT_APPL_CFLAGS)
 endif
 
 ifdef CONFIG_PACKAGE_dsl-cpe-dti-agent
@@ -180,7 +144,7 @@ CONFIGURE_ARGS += \
 	--enable-safec-library="-L$(STAGING_DIR)/usr/lib"
 endif
 
-ifeq ($(CONFIG_$(PKG_NAME)_DSL_JSON_PARSING),y)
+ifeq ($(CONFIG_dsl-cpe-control-vrx_DSL_JSON_PARSING),y)
 CONFIGURE_ARGS += \
 	--enable-libjson-c-support=yes \
 	--enable-libjson-c-include="-I$(STAGING_DIR)/usr/include/json-c/" \
@@ -188,19 +152,11 @@ CONFIGURE_ARGS += \
 endif
 
 define Build/Configure
-	# remove "configured" stamps of other configs
 	@- rm $(PKG_BUILD_DIR)/.configured*
 	$(call Build/Configure/Default)
 endef
 
-define Build/Clean
-	@- rm -Rf $(PKG_BUILD_DIR)/ipkg*
-	@- [ -e $(PKG_BUILD_DIR)/Makefile ] && $(MAKE) -C $(PKG_BUILD_DIR) clean
-	$(call Build/Clean/Default)
-endef
-
-define Package/$(PKG_NAME)/install
-
+define Package/dsl-cpe-control-vrx/install
 	$(INSTALL_DIR) $(1)/$(DSL_INITD_DIR)
 	$(INSTALL_BIN) ./files/ltq_dsl_fw_dbg.sh $(1)/$(DSL_INITD_DIR)
 	$(SED) "s:@dsl_bin_dir@:$(DSL_BIN_DIR):g" $(1)/$(DSL_INITD_DIR)/ltq_dsl_fw_dbg.sh
@@ -251,25 +207,4 @@ endif
         )
 endef
 
-define Package/$(PKG_NAME)/postinst
-        #!/bin/sh
-        $(if $(CONFIG_LANTIQ_OPENWRT_FIRMWARE), \
-        if [ -z "$${IPKG_INSTROOT}" ]; then \
-                /etc/init.d/xdsl enable; \
-        fi; \
-        )
-        exit 0
-endef
-
-define Package/$(PKG_NAME)/prerm
-        #!/bin/sh
-        $(if $(CONFIG_LANTIQ_OPENWRT_FIRMWARE), \
-        if [ -z "$${IPKG_INSTROOT}" ]; then \
-                /etc/init.d/xdsl disable; \
-                /etc/init.d/xdsl stop; \
-        fi; \
-        )
-        exit 0
-endef
-
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,dsl-cpe-control-vrx))

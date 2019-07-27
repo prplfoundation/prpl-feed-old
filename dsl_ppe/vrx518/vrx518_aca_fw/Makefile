@@ -4,13 +4,12 @@ PKG_NAME:=vrx518_aca_fw
 PKG_VERSION:=1.5.0
 PKG_MD5SUM:=07cf8921cc5909c754d27d0456a0452e
 PKG_RELEASE:=1
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE:=vrx518_aca_fw-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://mts-chd.intel.com/~wlnsw/dist/
-#PKG_SOURCE_URL:=http://localhost
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/vrx518_aca_fw
   SECTION:=firmware  
   SUBMENU:=Intel
   TITLE:=VRX518 ACA firmware
@@ -19,19 +18,13 @@ define Package/$(PKG_NAME)
   MENU:=1
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/vrx518_aca_fw/description
 	VRX518 ACA firmware
 endef
 
-define Build/Prepare
-	$(call Build/Prepare/Default)
-endef
+Build/Compile=
 
-define Build/Compile
-	#$(CP) -L ./src/* $(PKG_BUILD_DIR)
-endef
-
-define Package/$(PKG_NAME)/install
+define Package/vrx518_aca_fw/install
 	$(INSTALL_DIR) $(1)/lib/firmware/09a9
 ifeq ($(CONFIG_TARGET_lantiq_xrx220),y)
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/platform/xrx200/aca_fw.bin $(1)/lib/firmware/09a9
@@ -50,4 +43,4 @@ ifeq ($(CONFIG_TARGET_x86_puma),y)
 endif
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,vrx518_aca_fw))

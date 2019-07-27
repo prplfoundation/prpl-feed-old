@@ -1,11 +1,3 @@
-#
-# Copyright (C) 2010 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-# $Id:  $
-
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
@@ -22,23 +14,22 @@ PKG_CAT:=zcat
 PKG_BUILD_DEPENDS:=ifxos
 PKG_USE_MIPS16:=0
 LANTIQ_BIN_DIR=opt/lantiq/bin
-
 PKG_FIXUP:=autoreconf
 PKG_USE_MIPS16:=0
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/ltq-evtlog
   SECTION:=driver
-  CATEGORY:=Lantiq
+  CATEGORY:=Intel
   TITLE:=Event Logger Kernel Module
   URL:=http://www.Lantiq.com/
-  MAINTAINER:=Lantiq Beteiligungs-GmbH & Co.KG
+  MAINTAINER:=Intel Corporation
   MENU:=1
   DEPENDS:=+kmod-ifxos
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/ltq-evtlog/description
 	Lantiq Event Logger (Kernel Module)
 endef
 
@@ -46,16 +37,10 @@ CONFIGURE_ARGS += --disable-trace --with-kernel-incl="$(LINUX_DIR)/include" \
 						--with-ifxos-incl="$(STAGING_DIR)/usr/include/ifxos" \
 						--with-ifxos-lib="$(STAGING_DIR)/usr/lib"
 
-ifeq ($(CONFIG_LINUX_2_4),)
 CONFIGURE_ARGS += --enable-linux-26 --with-kernel-build="$(LINUX_DIR)" ARCH=$(LINUX_KARCH)
 PKG_MODULE_EXTENSION=.ko
-else
-ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
-CONFIGURE_ARGS += --with-cflags="-fno-pic -mno-abicalls -mlong-calls -G 0"
-endif
-endif
 
-define Package/$(PKG_NAME)/install
+define Package/ltq-evtlog/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/load_evtlog.sh $(1)/etc/init.d/
 	$(INSTALL_DIR) $(1)/$(LANTIQ_BIN_DIR)
@@ -65,17 +50,17 @@ define Package/$(PKG_NAME)/install
 	ln -snf /$(MODULES_SUBDIR)/drv_ifxos.$(LINUX_KMOD_SUFFIX) $(1)/$(LANTIQ_BIN_DIR)/drv_ifxos$(PKG_MODULE_EXTENSION)
 endef
 
-define KernelPackage/$(PKG_NAME)
-  SUBMENU:=Lantiq
+define KernelPackage/ltq-evtlog
+  SUBMENU:=Intel
   DEPENDS:=+kmod-ifxos
   TITLE:=Event Logger Module
   URL:=http://www.lantiq.com/
-  MAINTAINER:=Lantiq Beteiligungs-GmbH & Co.KG
+  MAINTAINER:=Intel Corporation
   FILES:=$(PKG_BUILD_DIR)/src/drv_event_logger$(PKG_MODULE_EXTENSION)
   AUTOLOAD:=$(call AutoLoad,15,drv_event_logger)
 endef
 
-define KernelPackage/$(PKG_NAME)/description
+define KernelPackage/ltq-evtlog/description
    Event Logger Kernel Module
 endef
 
@@ -89,5 +74,5 @@ define Build/UninstallDev
 	- rm -Rf $(1)/usr/include/event_logger
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call KernelPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,ltq-evtlog))
+$(eval $(call KernelPackage,ltq-evtlog))

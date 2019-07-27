@@ -1,10 +1,3 @@
-#
-# Copyright (C) 2009 OpenWrt.org
-# Copyright (C) 2011 lantiq.com
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lq-base-files-common
@@ -12,28 +5,23 @@ PKG_RELEASE:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/lq-base-files-common
   SUBMENU:=Base Files
   SECTION:=base
-  CATEGORY:=Lantiq
+  CATEGORY:=Intel
   TITLE:=Common files for Lantiq systems (transitional package)
   URL:=http://www.lantiq.com/
-  MAINTAINER:=Lantiq
+  MAINTAINER:=Intel
   DEPENDS:=+ltq-base-files-common
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/lq-base-files-common/description
  This package is only transitional to help renaming to ltq-base-files-common.
  Can be unselected/removed later.
 endef
 
-define Build/Prepare
-endef
+Build/Prepare=
+Build/Compile=
+Package/lq-base-files-common/install=
 
-define Build/Compile
-endef
-
-define Package/$(PKG_NAME)/install
-endef
-
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,lq-base-files-common))

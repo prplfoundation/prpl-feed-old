@@ -1,10 +1,3 @@
-#
-# Copyright (C) 2009-2010 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ifxos-ecos
@@ -16,33 +9,24 @@ PKG_RELEASE:=1
 PKG_BUILD_DEPENDS:=ecos
 PKG_SOURCE_URL:=http://localhost
 PKG_MD5SUM:=2c40d61533696b279cbaa9794bcf3559
-
 PKG_FIXUP:=libtool
 PKG_INSTALL:=1
-
-# re-define PATCH_DIR to get version-specific patches
 PATCH_DIR:=./patches-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 
-ifeq ($(DUMP),)
-	STAMP_CONFIGURED:=$(strip $(STAMP_CONFIGURED))_$(shell $(SH_FUNC) grep '^CONFIG_PACKAGE_.*ifxos' $(TOPDIR)/.config | md5s)$(shell $(SH_FUNC) grep '^CONFIG_ECOS_' $(TOPDIR)/.config | md5s)
-endif
-
 define Package/$(PKG_NAME)
   SECTION:=libs
-  CATEGORY:=Lantiq
+  CATEGORY:=Intel
   SUBMENU:=IFXOS
-  TITLE:=Lantiq OS abstraction library (eCos)
+  TITLE:=Intel OS abstraction library (eCos)
   URL:=http://www.lantiq.com/
-  MAINTAINER:=Lantiq
+  MAINTAINER:=Intel
   MENU:=1
   DEPENDS:=+ecos
 endef
 
 define Package/$(PKG_NAME)/config
-$(call Package/$(PKG_NAME)/override_version)
-$(call Package/$(PKG_NAME)/override_source_path)
 	menu "configuration"
 	depends on PACKAGE_$(PKG_NAME)
 		source "$(SOURCE)/config/Config.ecos"
@@ -80,12 +64,6 @@ define Build/Prepare
 	$(SED) 's/#define DEVIO_MAXFDS.*/#define DEVIO_MAXFDS $(strip $(subst ",,$(CONFIG_IFXOS_ECOS_DEVIO_MAXFDS)))/g' $(PKG_BUILD_DIR)/src/include/ifxos_device_io.h
 endef
 endif
-
-define Build/Clean
-	@- rm -Rf $(PKG_BUILD_DIR)/ipkg*
-	@- [ -e $(PKG_BUILD_DIR)/Makefile ] && $(MAKE) -C $(PKG_BUILD_DIR) clean
-	$(call Build/Clean/Default)
-endef
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/{lib,include/ifxos}

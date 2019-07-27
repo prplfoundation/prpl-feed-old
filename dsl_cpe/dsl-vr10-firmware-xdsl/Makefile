@@ -1,11 +1,3 @@
-#
-# Copyright (C) 2017 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-# $Id: $
-
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
@@ -24,44 +16,29 @@ FIRMWARE_DIR:=/lib/firmware
 
 include $(INCLUDE_DIR)/package.mk
 
-ifeq ($(DUMP),)
-  $(info "FIRMWARE_DIR = $(FIRMWARE_DIR)")
-   STAMP_CONFIGURED:=$(strip $(STAMP_CONFIGURED))_$(shell $(SH_FUNC) ( \
-      grep '^CONFIG_UBOOT_CONFIG_FIRMWARE_IN_ROOTFS' $(TOPDIR)/.config; \
-      grep '^CONFIG_$(PKG_NAME)' $(TOPDIR)/.config) | md5s)
-endif
-
-define Package/$(PKG_NAME)
+define Package/dsl-vr10-firmware-xdsl
 	SECTION:=firmware
-	CATEGORY:=Lantiq
+	CATEGORY:=Intel
 	SUBMENU:=DSL Subsystem
 	TITLE:=VR10 CPE xDSL firmware
 	URL:=http://www.lantiq.com/
-	MAINTAINER:=Lantiq Beteiligungs-GmbH & Co. KG
+	MAINTAINER:=Intel Beteiligungs-GmbH & Co. KG
 	DEPENDS:=dsl-cpe-mei-vrx
 	MENU:=1
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/dsl-vr10-firmware-xdsl/description
 	VRX300 CPE xDSL firmware
 endef
 
 define Build/Configure
-	# remove "configured" stamps of other configs
 	@- rm $(PKG_BUILD_DIR)/.configured*
 	$(call Build/Configure/Default)
 endef
 
-define Build/Clean
-	@- rm -Rf $(PKG_BUILD_DIR)/ipkg*
-	@- [ -e $(PKG_BUILD_DIR)/Makefile ] && $(MAKE) -C $(PKG_BUILD_DIR) clean
-	$(call Build/Clean/Default)
-endef
+Build/Compile=
 
-define Build/Compile
-endef
-
-define Package/$(PKG_NAME)/install
+define Package/dsl-vr10-firmware-xdsl/install
 	$(INSTALL_DIR) $(1)/$(FIRMWARE_DIR)
 
 ifneq ($(CONFIG_UBOOT_CONFIG_FIRMWARE_IN_ROOTFS)$(CONFIG_dsl-cpe-mei-vrx_DEVICE_VR10_320),)
@@ -76,5 +53,5 @@ else
 endif
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,dsl-vr10-firmware-xdsl))
 

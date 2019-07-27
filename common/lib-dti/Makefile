@@ -1,79 +1,65 @@
-#
-# Copyright (C) 2006-2010 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lib-dti
 PKG_RELEASE:=1
 PKG_BASE_NAME:=lib_dti
 PKG_VERSION:=1.2.5
-
 PKG_SOURCE:=$(PKG_BASE_NAME)-$(PKG_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_BASE_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=http://localhost
-
 PKG_BIN_DIR=/opt/lantiq/bin
 AGENT_LIB_DIR=/opt/lantiq/lib
 PKG_BUILD_DEPENDS:=ifxos
-
 PKG_FIXUP:=libtool
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-ifeq ($(DUMP),)
-	STAMP_CONFIGURED:=$(strip $(STAMP_CONFIGURED))_$(shell $(SH_FUNC) grep '^CONFIG_PACKAGE_lib-dti' $(TOPDIR)/.config | md5s)
-endif
-
-define Package/$(PKG_NAME)/Default
+define Package/lib-dti/Default
   TITLE:=DTI
   URL:=http://www.lantiq.com/
 endef
 
-define Package/$(PKG_NAME)/Default/description
+define Package/lib-dti/Default/description
  Debug and Trace Interface (DTI)
  This package provides a generic library used for the DTI access.
 endef
 
-define Package/$(PKG_NAME)
-$(call Package/$(PKG_NAME)/Default)
+define Package/lib-dti
+$(call Package/lib-dti/Default)
   SECTION:=libs
-  CATEGORY:=Lantiq
+  CATEGORY:=Intel
   DEPENDS:=+libpthread
   TITLE+= (library)
   SUBMENU:=DTI
 endef
 
-define Package/$(PKG_NAME)/description
-$(call Package/$(PKG_NAME)/Default/description)
+define Package/lib-dti/description
+$(call Package/lib-dti/Default/description)
  This package contains the DTI shared libraries, needed by other programs.
  - libdti_agent
 endef
 
-define Package/$(PKG_NAME)-device-generic
-$(call Package/$(PKG_NAME)/Default)
+define Package/lib-dti-device-generic
+$(call Package/lib-dti/Default)
   SECTION:=libs
-  CATEGORY:=Lantiq
+  CATEGORY:=Intel
   TITLE+= (generic device library)
   SUBMENU:=DTI
   DEFAULT:=n
   DEPENDS:=lib-dti
 endef
 
-define Package/$(PKG_NAME)-device-generic/description
-$(call Package/$(PKG_NAME)/Default/description)
+define Package/lib-dti-device-generic/description
+$(call Package/lib-dti/Default/description)
  This package contains the DTI generic device library (for testing).
  - libdti_device_generic
 endef
 
 define Package/dti-agent
-$(call Package/$(PKG_NAME)/Default)
+$(call Package/lib-dti/Default)
   SECTION:=application
-  CATEGORY:=Lantiq
+  CATEGORY:=Intel
   TITLE+= (Default Agent)
   SUBMENU:=DTI
   DEFAULT:=n
@@ -81,18 +67,16 @@ $(call Package/$(PKG_NAME)/Default)
 endef
 
 define Package/dti-agent/description
-$(call Package/$(PKG_NAME)/Default/description)
+$(call Package/lib-dti/Default/description)
  This package builds a default DTI Agent.
  - dti_agent
 endef
 
-define Package/$(PKG_NAME)/config
+define Package/lib-dti/config
 	menu "configuration"
-	depends on PACKAGE_$(PKG_NAME)
+	depends on PACKAGE_lib-dti
 		source "$(SOURCE)/config/Config.in"
 	endmenu
-   $(call Package/$(PKG_NAME)/override_version)
-   $(call Package/$(PKG_NAME)/override_source_path)
 endef
 
 CONFIGURE_ARGS += \
@@ -109,13 +93,6 @@ CONFIGURE_ARGS += \
 	$(call autoconf_bool,CONFIG_COMMON_DTI_STANDALONE,dti-agent) \
 	$(call autoconf_bool,CONFIG_COMMON_DTI_CLIENT_LIB,dti-client)
 
-
-define Build/Clean
-	@- rm -Rf $(PKG_BUILD_DIR)/ipkg*
-	@- [ -e $(PKG_BUILD_DIR)/Makefile ] && $(MAKE) -C $(PKG_BUILD_DIR) clean
-	$(call Build/Clean/Default)
-endef
-
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/{lib,include/dti}
 	$(CP) $(PKG_BUILD_DIR)/src/include/* $(1)/usr/include/dti
@@ -123,23 +100,20 @@ define Build/InstallDev
 	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/*.{a,la,so*} $(1)/usr/lib/
 endef
 
-
 define Build/UninstallDev
 	- rm -Rf $(1)/usr/include/dti
 	- rm -f $(1)/usr/lib/libdti*.so*
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/lib-dti/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libdti_agent*.so.* $(1)/usr/lib/
-
 ifeq ($(CONFIG_COMMON_DTI_CLIENT_LIB),y)
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libdti_client*.so.* $(1)/usr/lib/
 endif
-
 endef
 
-define Package/$(PKG_NAME)-device-generic/install
+define Package/lib-dti-device-generic/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libdti_device_generic*.so.* $(1)/usr/lib/
 endef
@@ -149,7 +123,6 @@ define Package/dti-agent/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/dti_agent_main $(1)/$(PKG_BIN_DIR)
 endef
 
-
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)-device-generic))
+$(eval $(call BuildPackage,lib-dti))
+$(eval $(call BuildPackage,lib-dti-device-generic))
 $(eval $(call BuildPackage,dti-agent))

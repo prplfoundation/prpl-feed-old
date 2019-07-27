@@ -1,11 +1,3 @@
-#
-# Copyright (C) 2011 OpenWrt.org
-# Copyright (C) 2011 lantiq.com
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dsl-vnx101-firmware
@@ -18,29 +10,28 @@ PKG_UNPACK:=gzip -dc $(DL_DIR)/$(PKG_SOURCE) | $(TAR) -C $(PKG_BUILD_DIR) $(TAR_
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=http://localhost
-FIRMWARE_DIR=lib/firmware/09AA/
+FIRMWARE_REV=09AA
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
-  CATEGORY:=Lantiq
+  CATEGORY:=Intel
   SUBMENU:=DSL Subsystem
   TITLE:=G.FAST CO VNX101 firmware
   URL:=http://www.lantiq.com/
-  MAINTAINER:=Lantiq Beteiligungs-GmbH & Co.KG
+  MAINTAINER:=Intel Corporation
   MENU:=1
   SECTION:=firmware
   DEPENDS:=+kmod-dsl-gfast-drv-pmi
 endef
 
-define Build/Compile
-endef
+Build/Compile=
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/$(FIRMWARE_DIR)
-	$(CP) $(PKG_BUILD_DIR)/$(PKG_TARGET_BASE_NAME) $(1)/$(FIRMWARE_DIR)
-	$(CP) $(PKG_BUILD_DIR)/xco_36_fw.bin $(1)/$(FIRMWARE_DIR)
-	$(CP) $(PKG_BUILD_DIR)/LICENSE $(1)/$(FIRMWARE_DIR)
+	$(INSTALL_DIR) $(1)/lib/firmware/$(FIRMWARE_REV)/
+	$(CP) $(PKG_BUILD_DIR)/$(PKG_TARGET_BASE_NAME) $(1)/lib/firmware/$(FIRMWARE_REV)/
+	$(CP) $(PKG_BUILD_DIR)/xco_36_fw.bin $(1)/lib/firmware/$(FIRMWARE_REV)/
+	$(CP) $(PKG_BUILD_DIR)/LICENSE $(1)/lib/firmware/$(FIRMWARE_REV)/
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

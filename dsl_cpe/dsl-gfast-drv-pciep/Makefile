@@ -1,11 +1,3 @@
-#
-# Copyright (C) 2014 OpenWrt.org
-# Copyright (C) 2014 lantiq.com
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
@@ -23,25 +15,20 @@ PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-ifeq ($(DUMP),)
-	STAMP_CONFIGURED:=$(strip $(STAMP_CONFIGURED))_$(shell $(SH_FUNC) grep '^CONFIG_VRX618_EP_' $(TOPDIR)/.config | md5s)
-endif
-
-define Package/$(PKG_NAME)
+define Package/dsl-gfast-drv-pciep
   SECTION:=app
-  CATEGORY:=Lantiq
+  CATEGORY:=Intel
   TITLE:= PCIe Endpoint Driver for VRX618
   URL:=http://www.lantiq.com/
-  MAINTAINER:=Lantiq
+  MAINTAINER:=Intel
   DEPENDS:=+libpthread +kmod-ifxos
   MENU:=1
   SUBMENU:=DSL Subsystem
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/dsl-gfast-drv-pciep/description
    PCIe Endpoint Driver for VRX618
 endef
-
 
 # make the submake silent:
 ifeq ($(QUIET),1)
@@ -53,30 +40,22 @@ endif
 
 CONFIGURE_ARGS += \
 	--enable-driver-include="-I$(STAGING_DIR)/usr/include -I$(STAGING_DIR)/usr/include/vrx618"
-
 CONFIGURE_ARGS += --enable-linux-kernel
 CONFIGURE_ARGS += --enable-kernelbuild="$(LINUX_DIR)"
 CONFIGURE_ARGS += --enable-kernelincl="$(LINUX_DIR)/include"
 CONFIGURE_ARGS += ARCH=$(LINUX_KARCH)
-PKG_MODULE_EXTENSION=.ko
 
-define KernelPackage/$(PKG_NAME)
-  SUBMENU:=Lantiq
+define KernelPackage/dsl-gfast-drv-pciep
+  SUBMENU:=Intel
   TITLE:=VRX618 PCIe Endpoint driver
   URL:=http://www.lantiq.com/
-  MAINTAINER:=Lantiq
+  MAINTAINER:=Intel
   DEPENDS:=+kmod-ifxos
   FILES:=$(PKG_BUILD_DIR)/src/$(PKG_BASE_NAME).$(LINUX_KMOD_SUFFIX)
-#  AUTOLOAD:=$(call AutoLoad,90,mod_vrx618_ep)
 endef
 
-define KernelPackage/$(PKG_NAME)/description
+define KernelPackage/dsl-gfast-drv-pciep/description
    The driver for VRX618 PCIe Endpoint application.
-endef
-
-define Build/Clean
-	@- [ -e $(PKG_BUILD_DIR)/Makefile ] && $(MAKE) -C $(PKG_BUILD_DIR) clean
-	$(call Build/Clean/Default)
 endef
 
 define Build/InstallDev
@@ -84,10 +63,10 @@ define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/* $(1)/usr/include/vrx618/
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/dsl-gfast-drv-pciep/install
 	$(INSTALL_DIR) $(1)/$(PKG_BIN_DIR)
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call KernelPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,dsl-gfast-drv-pciep))
+$(eval $(call KernelPackage,dsl-gfast-drv-pciep))
 

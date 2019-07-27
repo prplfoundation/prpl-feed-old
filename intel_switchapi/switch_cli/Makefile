@@ -1,10 +1,3 @@
-#
-# Copyright (C) 2008 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-# 
-
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
@@ -15,12 +8,11 @@ PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/prplfoundation/intel_switch_cli.git
 PKG_CONFIG_DEPENDS:=CONFIG_SWITCH_CLI_HELP_PRINTOUT
 PKG_FIXUP:=autoreconf
-
 PKG_LICENSE:=Intel
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/switch_cli
   SECTION:=util
   CATEGORY:=Intel
   TITLE:=Ethernet Switch Command Line Utility
@@ -30,13 +22,13 @@ define Package/$(PKG_NAME)
   MENU:=1
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/switch_cli/description
   Advanced Utility for Ethernet Switch driver with ioctl support
 endef
 
-define Package/$(PKG_NAME)/config
-  menu "$(PKG_NAME) features"
-	depends on PACKAGE_$(PKG_NAME)
+define Package/switch_cli/config
+  menu "switch_cli features"
+	depends on PACKAGE_switch_cli
 	config SWITCH_CLI_HELP_PRINTOUT
 	bool 'Help text'
 	default y
@@ -53,9 +45,9 @@ CONFIGURE_ARGS += \
 	--enable-gswip \
 	$(call autoconf_bool,CONFIG_SWITCH_CLI_HELP_PRINTOUT,printhelp)
 
-define Package/$(PKG_NAME)/install
+define Package/switch_cli/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/switch_cli $(1)/usr/bin/
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,switch_cli))

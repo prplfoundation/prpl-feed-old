@@ -1,44 +1,32 @@
-#
-# Copyright (C) 2008 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-# $Id: $
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=eembc-mb
 PKG_VERSION:=v1
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_BUILD_DIR:=$(BUILD_DIR)/eembc-mb-$(PKG_VERSION)
 PKG_RELEASE:=1
-#PKG_SOURCE_URL:=
-#PKG_MD5SUM:=
 PKG_SOURCE:=mith_lib_MB$(PKG_VERSION).tgz
 PKG_SOURCE2:=mith_wld_MB$(PKG_VERSION).tgz
 
 include $(INCLUDE_DIR)/package.mk
 
-# Re-define PKG_UNPACK to unpack 2 archives instead default one.
 PKG_UNPACK:=$(TAR) -C $(PKG_BUILD_DIR) -xzf $(DL_DIR)/$(PKG_SOURCE) && \
             $(TAR) -C $(PKG_BUILD_DIR) -xzf $(DL_DIR)/$(PKG_SOURCE2)
 
-define Package/$(PKG_NAME)
+define Package/eembc-mb
   SECTION:=application
   CATEGORY:=EEMBC
   TITLE:=EEMBC MultiBench
   DEPENDS:=+libpthread
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/eembc-mb/description
   MultiBench is a suite of benchmarks created by EEMBC
   (the Embedded Microprocessor Benchmarking Consortium (R))
   to measure and analyze the performance of platforms
   capable of executing in multiple hardware contexts.
 endef
 
-define Build/Configure
-endef
+Build/Configure=
 
 define Build/Compile
 	$(call Build/Compile/Default,build)
@@ -61,7 +49,7 @@ MAKE_FLAGS = \
 
 IFX_BIN_DIR=/opt/ifx/bin
 
-define Package/$(PKG_NAME)/install
+define Package/eembc-mb/install
 	echo INSTALL!!!
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(CP) $(PKG_BUILD_DIR)/builds/linux/bin/*.exe $(1)/usr/bin/
@@ -69,17 +57,4 @@ define Package/$(PKG_NAME)/install
 	$(CP) $(PKG_BUILD_DIR)/builds/linux/data/* $(1)/usr/data/
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
-
-define RequireSource
-  define Require/$(1)
-    [ -f $(DL_DIR)/$(1) ]
-  endef
-
-  $$(eval $$(call Require,$(1),\
-    Please get the file \"$(1)\" and put it in \"$(DL_DIR)\". \
-  ))
-endef
-
-$(eval $(call RequireSource,$(PKG_SOURCE)))
-$(eval $(call RequireSource,$(PKG_SOURCE2)))
+$(eval $(call BuildPackage,eembc-mb))

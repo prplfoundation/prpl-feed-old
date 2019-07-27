@@ -1,23 +1,14 @@
-#
-# Copyright (C) 2017 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=dsl-cpe-mei-vrx
 PKG_SOURCE_VERSION:=1.9.1
 PKG_BASE_NAME:=drv_mei_cpe
-# re-define PATCH_DIR to get version-specific patches
 PATCH_DIR:=./patches-$(PKG_SOURCE_VERSION)
 PKG_RELEASE:=1
 PKG_INSTALL:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/prplfoundation/intel_dsl_cpe_mei.git
-
 DSL_BIN_DIR=$(VENDOR_PATH)/bin
 DSL_INITD_DIR=$(VENDOR_PATH)/etc/init.d
 DSL_FW_DIR=/lib/firmware
@@ -26,67 +17,42 @@ PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
 
-# Get config values from general image config or other packages in dependency list
-# By default this is the reference place for definition of the following values
 DSL_NETLINK_ID=$(strip $(subst ",, $(CONFIG_dsl-cpe-mei-vrx_DSL_NETLINK_ID)))
 
 ifeq ($(DSL_NETLINK_ID),)
 	DSL_NETLINK_ID=28
 endif
 
-
-ifeq ($(DUMP),)
-	STAMP_CONFIGURED:=$(strip $(STAMP_CONFIGURED))_$(shell $(SH_FUNC) ( \
-		grep '^CONFIG_$(PKG_NAME)' $(TOPDIR)/.config; \
-		grep '^CONFIG_VRX_' $(TOPDIR)/.config; \
-		grep '^CONFIG_VRX320_' $(TOPDIR)/.config; \
-		grep '^CONFIG_$(PKG_NAME)_DTM_' $(TOPDIR)/.config; \
-		grep '^CONFIG_PTM_VECTORING' $(LINUX_DIR)/.config) | md5s)
-
-endif
-
-define Package/$(PKG_NAME)
+define Package/dsl-cpe-mei-vrx
   SECTION:=driver
   CATEGORY:=Intel
   SUBMENU:=DSL Subsystem
   TITLE:=DSL CPE MEI Driver for VRX Family
   URL:=http://www.intel.com/
   MAINTAINER:=Intel Corporation
-  DEPENDS:=+kmod-ifxos \
-	+kmod-dsl-cpe-mei-vrx \
-	+PACKAGE_kmod-vrx518-dp-mod:kmod-vrx518-dp-mod \
-	+PACKAGE_kmod-vrx518_tc_drv:kmod-vrx518_tc_drv \
-	+PACKAGE_kmod-vrx318-dp-mod:kmod-vrx318-dp-mod \
+  DEPENDS:=+kmod-ifxos +kmod-dsl-cpe-mei-vrx +PACKAGE_kmod-vrx518-dp-mod:kmod-vrx518-dp-mod \
+  	+PACKAGE_kmod-vrx518_tc_drv:kmod-vrx518_tc_drv +PACKAGE_kmod-vrx318-dp-mod:kmod-vrx318-dp-mod \
 	+PACKAGE_safeclibs:safeclibs
-#  @(TARGET_ltqcpe_vr9||TARGET_ltqcpe_platform_vr9||TARGET_ltqcpe_platform_ar10_vrx318||TARGET_lantiq_xway)
   MENU:=1
 endef
 
-define KernelPackage/$(PKG_NAME)
+define KernelPackage/dsl-cpe-mei-vrx
   SUBMENU:=Intel
   TITLE:=DSL CPE MEI Driver for VRX Family
   URL:=http://www.intel.com/
   MAINTAINER:=Intel Corporation
-  DEPENDS:=+kmod-ifxos \
-			+PACKAGE_kmod-vrx518-dp-mod:kmod-vrx518-dp-mod \
-			+PACKAGE_kmod-vrx318-dp-mod:kmod-vrx318-dp-mod \
-			+PACKAGE_kmod-vrx518_tc_drv:kmod-vrx518_ep \
-			+PACKAGE_safeclibs:safeclibs
-#  @(TARGET_ltqcpe_vr9||TARGET_ltqcpe_platform_vr9||TARGET_ltqcpe_platform_ar10_vrx318||TARGET_lantiq_xway)
+  DEPENDS:=+kmod-ifxos +PACKAGE_kmod-vrx518-dp-mod:kmod-vrx518-dp-mod +PACKAGE_kmod-vrx318-dp-mod:kmod-vrx318-dp-mod \
+	+PACKAGE_kmod-vrx518_tc_drv:kmod-vrx518_ep +PACKAGE_safeclibs:safeclibs
   KCONFIG:=CONFIG_LTQ_DSL_CPE_MEI_VRX=y
   FILES:=$(PKG_BUILD_DIR)/src/$(PKG_BASE_NAME)$(PKG_MODULE_EXTENSION)
   AUTOLOAD:=$(call AutoLoad,44,$(PKG_BASE_NAME))
 endef
 
-
-# package specific configuration
-define Package/$(PKG_NAME)/config
-$(call Package/$(PKG_NAME)/override_version)
-$(call Package/$(PKG_NAME)/override_source_path)
+define Package/dsl-cpe-mei-vrx/config
 	source "$(SOURCE)/Config.in"
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/dsl-cpe-mei-vrx/description
 	Intel MEI CPE Driver
 	Supported Devices:
 		- VRX200 Family
@@ -94,7 +60,7 @@ define Package/$(PKG_NAME)/description
 		- VRX500 Family
 endef
 
-define KernelPackage/$(PKG_NAME)/description
+define KernelPackage/dsl-cpe-mei-vrx/description
 	Intel MEI CPE Kernel Module Driver
 endef
 
@@ -161,7 +127,7 @@ CONFIGURE_ARGS += \
 	--with-dbg-netlink-id="$(DSL_NETLINK_ID)"
 endif
 
-ifeq ($(CONFIG_$(PKG_NAME)_MODEL_DEBUG),y)
+ifeq ($(CONFIG_dsl-cpe-mei-vrx_MODEL_DEBUG),y)
 	CONFIGURE_ARGS += --enable-debug
 endif
 
@@ -217,26 +183,11 @@ ifeq ($(CONFIG_dsl-cpe-mei-vrx_USE_MEI_ADD_EXT_DRV_CFLAGS),y)
 CONFIGURE_ARGS += --enable-add_ext_drv_cflags=$(CONFIG_dsl-cpe-mei-vrx_MEI_ADD_EXT_DRV_CFLAGS)
 endif
 
-#ifeq ($(CONFIG_LINUX_2_6),y)
 CONFIGURE_ARGS += \
 	--enable-linux-26 \
 	--enable-kernelbuild="$(LINUX_DIR)" \
 	ARCH=$(LINUX_KARCH)
 PKG_MODULE_EXTENSION=.ko
-#endif
-
-define Build/Configure
-	# remove "configured" stamps of other configs
-	@- rm $(PKG_BUILD_DIR)/.configured*
-	$(call Build/Configure/Default)
-endef
-
-define Build/Clean
-	@- rm -Rf $(PKG_BUILD_DIR)/ipkg*
-	@- [ -e $(PKG_BUILD_DIR)/Makefile ] && $(MAKE) -C $(PKG_BUILD_DIR) clean
-	@- rm -f $(LINUX_DIR)/drivers/char/ltq_dsl_cpe_mei_vrx.o
-	$(call Build/Clean/Default)
-endef
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/{lib,include}
@@ -247,8 +198,7 @@ define Build/InstallDev
 	$(CP) $(PKG_BUILD_DIR)/src/cmv_message_format.h $(1)/usr/include/
 endef
 
-define Package/$(PKG_NAME)/install
-
+define Package/dsl-cpe-mei-vrx/install
 	$(INSTALL_DIR) $(1)/$(DSL_INITD_DIR)
 	$(INSTALL_BIN) ./files/ltq_load_cpe_mei_drv.sh $(1)/$(DSL_INITD_DIR)/
 	$(SED) "s:@dsl_bin_dir@:$(DSL_BIN_DIR):g" $(1)/$(DSL_INITD_DIR)/ltq_load_cpe_mei_drv.sh
@@ -290,7 +240,7 @@ endif
 	$(INSTALL_DIR) $(1)/$(DSL_BIN_DIR)
 
 # Copy configuration files to rootfs
-ifeq ($(CONFIG_$(PKG_NAME)_MODEL_DEBUG),y)
+ifeq ($(CONFIG_dsl-cpe-mei-vrx_MODEL_DEBUG),y)
 	@- [ -e ./files/dsl_dbg.cfg ] && $(INSTALL_DATA) ./files/dsl_dbg.cfg $(1)/$(DSL_BIN_DIR)/dsl.cfg
 else
 	@- [ -e ./files/dsl_rel.cfg ] && $(INSTALL_DATA) ./files/dsl_rel.cfg $(1)/$(DSL_BIN_DIR)/dsl.cfg
@@ -336,5 +286,5 @@ endif
 
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call KernelPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,dsl-cpe-mei-vrx))
+$(eval $(call KernelPackage,dsl-cpe-mei-vrx))

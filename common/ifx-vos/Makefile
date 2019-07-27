@@ -1,11 +1,3 @@
-# 
-# Copyright (C) 2006 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-# $Id: $
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ifx-vos
@@ -15,20 +7,19 @@ PKG_SOURCE:=$(PKG_BASE_NAME)-$(PKG_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_BASE_NAME)-$(PKG_VERSION)
 PKG_RELEASE:=1
 PKG_SOURCE_URL:=http://localhost
-#PKG_MD5SUM:=
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/ifx-vos
   SECTION:=libs
-  CATEGORY:=Lantiq
+  CATEGORY:=Intel
   TITLE:=Virtual OS abstraction library (deprecated!)
   URL:=http://www.lantiq.com/
-  MAINTAINER:=Lantiq
+  MAINTAINER:=Intel
   DEPENDS:=+libpthread
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/ifx-vos/description
 	This library will be used by some Infineon applications.
 	DEPRECATED: Please use ifx-os for new applications!
 endef
@@ -47,7 +38,4 @@ define Build/InstallDev
 	$(CP) $(PKG_BUILD_DIR)/include/* $(1)/usr/include/
 endef
 
-
-
-$(eval $(call BuildPackage,$(PKG_NAME)))
-
+$(eval $(call BuildPackage,ifx-vos))

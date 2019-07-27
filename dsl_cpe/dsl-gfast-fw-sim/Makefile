@@ -18,18 +18,18 @@ PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/dsl-gfast-fw-sim
   SECTION:=libs
-  CATEGORY:=Lantiq
+  CATEGORY:=Intel
   TITLE:= VRX618 FW Message and State Simulation Library
   URL:=http://www.lantiq.com/
-  MAINTAINER:=Lantiq
+  MAINTAINER:=Intel
   DEPENDS:=+libpthread +kmod-ifxos
   MENU:=1
   SUBMENU:=DSL Subsystem
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/dsl-gfast-fw-sim/description
   VRX618 FW Message and State Simulation Library
 endef
 
@@ -42,21 +42,15 @@ CONFIGURE_ARGS += --enable-ifxos-library="-L$(STAGING_DIR)/usr/lib"
 CONFIGURE_ARGS += --enable-driver-include="-I$(STAGING_DIR)/usr/include"
 CONFIGURE_ARGS += ARCH=$(LINUX_KARCH)
 
-define KernelPackage/$(PKG_NAME)
-  SUBMENU:=Lantiq
+define KernelPackage/dsl-gfast-fw-sim
+  SUBMENU:=Intel
   TITLE:= VRX618 FW Message and State Simulation Library
   URL:=http://www.lantiq.com/
-  MAINTAINER:=Lantiq
+  MAINTAINER:=Intel
   DEPENDS:=+kmod-ifxos
   MENU:=1
   FILES:=$(PKG_INSTALL_DIR)/usr/bin/$(PKG_KERNEL_MODULE_NAME).$(LINUX_KMOD_SUFFIX)
 endef
-
-define Build/Clean
-	@- [ -e $(PKG_BUILD_DIR)/Makefile ] && $(MAKE) -C $(PKG_BUILD_DIR) clean
-	$(call Build/Clean/Default)
-endef
-
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/{lib,include/vrx618_sim}
@@ -65,10 +59,10 @@ define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.{a,la,so*} $(1)/usr/lib/
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/dsl-gfast-fw-sim/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libvrx618_fw_sim.so* $(1)/usr/lib/
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call KernelPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,dsl-gfast-fw-sim))
+$(eval $(call KernelPackage,dsl-gfast-fw-sim))

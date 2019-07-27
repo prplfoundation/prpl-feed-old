@@ -1,11 +1,3 @@
-#
-# Copyright (C) 2017 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-# $Id: $
-
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
@@ -22,21 +14,13 @@ PKG_TARGET_BASE_NAME:=xcpe_hw_2p.bin
 
 include $(INCLUDE_DIR)/package.mk
 
-FIRMWARE_DIR:=/opt/lantiq/firmware
-
-ifeq ($(DUMP),)
-  $(info "FIRMWARE_DIR = $(FIRMWARE_DIR)")
-   STAMP_CONFIGURED:=$(strip $(STAMP_CONFIGURED))_$(shell ( \
-      grep '^CONFIG_$(PKG_NAME)' $(TOPDIR)/.config) | md5s)
-endif
-
 define Package/$(PKG_NAME)
 	SECTION:=firmware
-	CATEGORY:=Lantiq
+	CATEGORY:=Intel
 	SUBMENU:=DSL Subsystem
 	TITLE:=VR9 CPE VDSL ON-chip bonding firmware
 	URL:=http://www.lantiq.com/
-	MAINTAINER:=Lantiq Beteiligungs-GmbH & Co. KG
+	MAINTAINER:=Intel Beteiligungs-GmbH & Co. KG
 	DEPENDS:=+dsl-cpe-mei-vrx
 	MENU:=1
 endef
@@ -45,17 +29,14 @@ define Package/$(PKG_NAME)/description
 	VRX200 CPE xDSL ON-chip bonding firmware
 endef
 
-define Build/Configure
-endef
-
-define Build/Compile
-endef
+Build/Configure=
+Build/Compile=
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/$(FIRMWARE_DIR)
-	$(CP) $(PKG_BUILD_DIR)/*.bin $(1)/$(FIRMWARE_DIR)/$(PKG_BASE_NAME)-$(PKG_VERSION).bin;
-	$(CP) $(PKG_BUILD_DIR)/LICENSE $(1)/$(FIRMWARE_DIR)/;
-	ln -sf $(PKG_BASE_NAME)-$(PKG_VERSION).bin $(1)/$(FIRMWARE_DIR)/$(PKG_TARGET_BASE_NAME);
+	$(INSTALL_DIR) $(1)/$(/opt/lantiq/firmware)
+	$(CP) $(PKG_BUILD_DIR)/*.bin $(1)/$(/opt/lantiq/firmware)/$(PKG_BASE_NAME)-$(PKG_VERSION).bin;
+	$(CP) $(PKG_BUILD_DIR)/LICENSE $(1)/$(/opt/lantiq/firmware)/;
+	ln -sf $(PKG_BASE_NAME)-$(PKG_VERSION).bin $(1)/$(/opt/lantiq/firmware)/$(PKG_TARGET_BASE_NAME);
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

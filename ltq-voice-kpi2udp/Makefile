@@ -1,10 +1,3 @@
-#
-# Copyright (C) 2008 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
@@ -18,13 +11,12 @@ PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/drv_kpi2udp-$(PKG_VERSION)
 PKG_START_SCRIPT:=load_voice_kpi2udp.sh
 PKG_BUILD_DEPENDS:=ltq-voice-tapi ifxos
 
-# Add dependencies on symbols in the configure file
 PKG_CONFIG_DEPENDS:=\
        $(foreach _mr,$(shell grep -w config config/Config.in|awk '{ print $$2 }'),CONFIG_$(_mr)) \
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/ltq-voice-kpi2udp
   SECTION:=driver
   CATEGORY:=Intel
   SUBMENU:=Voice Subsystem
@@ -35,58 +27,36 @@ define Package/$(PKG_NAME)
   DEPENDS:=ltq-voice-tapi +kmod-ifxos +kmod-voice-tapi-kpi2udp
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/ltq-voice-kpi2udp/description
 	RTP packet path acceleration into IP stack (strongly recommended)
 endef
 
-define Package/$(PKG_NAME)/config
-$(call Package/$(PKG_NAME)/override_version)
-$(call Package/$(PKG_NAME)/override_source_path)
+define Package/ltq-voice-kpi2udp/config
+$(call Package/ltq-voice-kpi2udp/override_version)
+$(call Package/ltq-voice-kpi2udp/override_source_path)
 #	menu "configuration"
-#		depends on PACKAGE_$(PKG_NAME)
+#		depends on PACKAGE_ltq-voice-kpi2udp
 #		source "$(SOURCE)/config/Config.in"
 #	endmenu
 	source "$(SOURCE)/config/Config.in"
 endef
 
-# Add user specified CFLAGS
 ifneq ($(CONFIG_LTQ_VOICE_KPI2UDP_USER_FLAGS),"")
 KPI2UDP_USER_CFLAGS=$(strip $(subst ",, $(CONFIG_LTQ_VOICE_KPI2UDP_USER_FLAGS)))
 CONFIGURE_ARGS += --with-cflags="$(KPI2UDP_USER_CFLAGS)"
 endif
 
-# Add user specified configure options
 ifneq ($(CONFIG_LTQ_VOICE_KPI2UDP_USER_OPTIONS),"")
 CONFIGURE_ARGS += $(subst ",, $(CONFIG_LTQ_VOICE_KPI2UDP_USER_OPTIONS))
 endif
 
 DRV_TAPI_INCLUDE:=$(STAGING_DIR)/usr/include/drv_tapi
-
 CONFIGURE_ARGS += --with-kernel-incl="$(LINUX_DIR)/include"
 CONFIGURE_ARGS += --with-tapi-incl="$(DRV_TAPI_INCLUDE)"
 CONFIGURE_ARGS += --with-ifxos-incl=$(STAGING_DIR)/usr/include/ifxos
 CONFIGURE_ARGS += --enable-warnings
-
-ifneq ($(CONFIG_LINUX_2_4),y)
 CONFIGURE_ARGS += --enable-linux-26 --with-kernel-build="$(LINUX_DIR)" ARCH=$(LINUX_KARCH)
 PKG_MODULE_EXTENSION=.$(LINUX_KMOD_SUFFIX)
-endif
-
-#define Build/InstallDev
-#	$(INSTALL_DIR) $(1)/usr/include
-#	mkdir -p $(1)/usr/include/drv_kpi2udp
-#	$(CP) $(PKG_BUILD_DIR)/include/* $(1)/usr/include/drv_kpi2udp
-#endef
-
-#define Build/UninstallDev
-#	rm -rf $(BUILD_DIR)/drv_kpi2udp
-#endef
-
-define Build/Clean
-	@- [ -e $(PKG_BUILD_DIR)/ipkg ] && rm -Rf $(PKG_BUILD_DIR)/ipkg
-	@- [ -e $(PKG_BUILD_DIR)/Makefile ] && $(MAKE) -C $(PKG_BUILD_DIR) clean
-	$(call Build/Clean/Default)
-endef
 
 define Build/Configure
 	rm -f $(PKG_BUILD_DIR)/.configured*
@@ -95,7 +65,7 @@ define Build/Configure
 endef
 
 ifneq ($(CONFIG_TARGET_intel_mips_falcon)$(CONFIG_TARGET_lantiq_falcon),y)
-define Package/$(PKG_NAME)/install
+define Package/ltq-voice-kpi2udp/install
 	# Startup script
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/$(PKG_START_SCRIPT) $(1)/etc/init.d/
@@ -105,7 +75,7 @@ define Package/$(PKG_NAME)/install
 endef
 endif
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,ltq-voice-kpi2udp))
 
 define KernelPackage/voice-tapi-kpi2udp
   SUBMENU:=Voice over IP
@@ -115,8 +85,7 @@ define KernelPackage/voice-tapi-kpi2udp
   DEPENDS:=+kmod-ltq-tapi @(TARGET_intel_mips||TARGET_lantiq)
   FILES:=$(PKG_BUILD_DIR)/drv_kpi2udp$(PKG_MODULE_EXTENSION)
   AUTOLOAD:=$(call AutoLoad,26,drv_kpi2udp)
-  KCONFIG:= \
-	CONFIG_UDP_REDIRECT=y
+  KCONFIG:=CONFIG_UDP_REDIRECT=y
 endef
 
 define KernelPackage/voice-tapi-kpi2udp/description

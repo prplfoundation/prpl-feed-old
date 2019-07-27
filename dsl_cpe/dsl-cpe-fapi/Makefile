@@ -1,10 +1,3 @@
-#
-# Copyright (C) 2017 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
@@ -15,38 +8,28 @@ PKG_BASE_NAME:=dsl_cpe_fapi
 PKG_SOURCE:=$(PKG_BASE_NAME)-$(PKG_VERSION).tar.gz
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/$(PKG_BASE_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=http://localhost
-
 LANTIQ_BIN_DIR=/$(VENDOR_PATH)/bin
-
 PKG_FIXUP:=autoreconf
 PKG_FIXUP:=libtool
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-# Get config values from general image config or other packages in dependency list
-# Definition of these values will be overtaken from package 'dsl-cpe-mei-vrx'
-
-# Set default config values if necessary (not defined before)
-
-define Package/$(PKG_NAME)
-	CATEGORY:=Lantiq
-	SUBMENU:=DSL Subsystem
-	TITLE:=DSL CPE FAPI shared lib
-	URL:=http://www.lantiq.com/
-	MAINTAINER:=Lantiq Beteiligungs-GmbH & Co. KG
-	DEPENDS:= +libugwhelper +libpthread +librt +lib-cli +dsl-cpe-control-vrx +libscapi +system_fapi
-	MENU:=1
+define Package/dsl-cpe-fapi
+  CATEGORY:=Intel
+  SUBMENU:=DSL Subsystem
+  TITLE:=DSL CPE FAPI shared lib
+  URL:=http://www.lantiq.com/
+  MAINTAINER:=Intel Beteiligungs-GmbH & Co. KG
+  DEPENDS:= +libugwhelper +libpthread +librt +lib-cli +dsl-cpe-control-vrx +libscapi +system_fapi
+  MENU:=1
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/dsl-cpe-fapi/description
 	This package contains the DSL CPE FAPI.
 endef
 
-define Package/$(PKG_NAME)/config
-    $(call Package/$(PKG_NAME)/override_version)
-    $(call Package/$(PKG_NAME)/override_source_path)
-    $(call Package/$(PKG_NAME)/config_debug_level)
+define Package/dsl-cpe-fapi/config
 	source "$(SOURCE)/Config.in"
 endef
 
@@ -73,18 +56,6 @@ ifeq ($(CONFIG_USE_MUSL),y)
 TARGET_CFLAGS += -DCONFIG_USE_MUSL
 endif
 
-define Build/Configure
-	# remove "configured" stamps of other configs
-	@- rm $(PKG_BUILD_DIR)/.configured*
-	$(call Build/Configure/Default)
-endef
-
-define Build/Clean
-	@- rm -Rf $(PKG_BUILD_DIR)/ipkg*
-	@- [ -e $(PKG_BUILD_DIR)/Makefile ] && $(MAKE) -C $(PKG_BUILD_DIR) clean
-	$(call Build/Clean/Default)
-endef
-
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/{lib,include/dsl-fapi}
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/include/* $(1)/usr/include/dsl-fapi
@@ -97,7 +68,7 @@ define Build/UninstallDev
 	- rm -f $(1)/usr/lib/libdslfapi*.*
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/dsl-cpe-fapi/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	cd $(1)/usr/lib && rm -f "libdslfapi.so.0" && ln -s "../../$(VENDOR_PATH)/usr/lib/libdslfapi.so" "libdslfapi.so.0"
 	$(INSTALL_DIR) $(1)/$(VENDOR_PATH)/usr/lib
@@ -110,4 +81,4 @@ define Package/$(PKG_NAME)/install
 	$(CP) $(PKG_BUILD_DIR)/include/dsl_fapi.h $(STAGING_DIR)/usr/docs/.
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,dsl-cpe-fapi))

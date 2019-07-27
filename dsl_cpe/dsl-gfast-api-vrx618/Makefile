@@ -1,11 +1,3 @@
-#
-# Copyright (C) 2011 OpenWrt.org
-# Copyright (C) 2011 lantiq.com
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dsl-gfast-api-vrx618
@@ -15,15 +7,11 @@ PKG_VERSION:=5.0.4
 PKG_SOURCE:=$(PKG_BASE_NAME)_vrx618-$(PKG_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_BASE_NAME)-$(PKG_VERSION)_vrx618/lib_dsl_api-$(PKG_VERSION)
 PKG_SOURCE_URL:=http://localhost
-PKG_BUILD_DEPENDS:=ifxos kmod-dsl-gfast-drv-pmi lib-dti\
-	DSL_CO_MELT:ifx-melt-lib
+PKG_BUILD_DEPENDS:=ifxos kmod-dsl-gfast-drv-pmi lib-dti DSL_CO_MELT:ifx-melt-lib
 PKG_FIXUP:=libtool
 PKG_INSTALL:=1
-include $(INCLUDE_DIR)/package.mk
 
-ifeq ($(DUMP),)
-	STAMP_CONFIGURED:=$(strip $(STAMP_CONFIGURED))_$(shell $(SH_FUNC) grep '^CONFIG_DSL_GFAST' $(TOPDIR)/.config | md5s)
-endif
+include $(INCLUDE_DIR)/package.mk
 
 LTQ_BIN_DIR=opt/lantiq/bin
 DSL_BOARD_TYPE=$(strip $(subst ",, $(CONFIG_DSL_GFAST_BOARD_TYPE)))
@@ -32,40 +20,29 @@ DSL_LINES_PER_DEVICE=$(strip $(subst ",, $(CONFIG_DSL_GFAST_LINES_PER_DEVICE_VRX
 DSL_CHANNELS_PER_LINE=$(strip $(subst ",, $(CONFIG_DSL_GFAST_CHANNELS_PER_LINE_VRX618)))
 DSL_MAX_PROFILE=$(strip $(subst ",, $(CONFIG_DSL_GFAST_MAX_PROFILE_VRX618)))
 
-define Package/$(PKG_BASE_NAME)/Default
-  CATEGORY:=Lantiq
+define Package/dsl-gfast-api-vrx618
+  CATEGORY:=Intel
   SUBMENU:=DSL Subsystem
   TITLE:=DSL G.FAST API
   URL:=http://www.lantiq.com/
-  MAINTAINER:=Lantiq Deutschland GmbH
+  MAINTAINER:=Intel Deutschland GmbH
   MENU:=1
-endef
-
-define Package/$(PKG_BASE_NAME)/Default/description
-	Lantiq DSL CO G.FAST API for VRX618.
-endef
-
-define Package/$(PKG_NAME)
-$(call Package/$(PKG_BASE_NAME)/Default)
   SECTION:=application
   TITLE+= VRX618
   DEPENDS:=+ifxos +kmod-dsl-gfast-drv-pmi +lib-dti +librt +lib-cli
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/dsl-gfast-api-vrx618/description
 	This package contains the VRX618 adaptation.
 endef
 
-define Package/$(PKG_NAME)/config
+define Package/dsl-gfast-api-vrx618/config
 	menu "configuration"
-	depends on PACKAGE_$(PKG_NAME)
+	depends on PACKAGE_dsl-gfast-api-vrx618
 		source "$(SOURCE)/config/Config.in"
 	endmenu
-	$(call Package/$(PKG_NAME)/override_version)
-	$(call Package/$(PKG_NAME)/override_source_path)
 endef
 
-# make the submake silent:
 ifeq ($(QUIET),1)
 MAKE_FLAGS+=-s
 endif
@@ -92,7 +69,6 @@ endif
 ifeq ($(CONFIG_DSL_GFAST_EXTERNAL_MELT_VRX618),y)
 DSL_CO_ENABLE_MELT:=--enable-melt-include=-I$(STAGING_DIR)/usr/include/melt --enable-melt-library=-L$(STAGING_DIR)/usr/lib
 endif
-
 
 CONFIGURE_ARGS += \
 	$(DSL_CO_ENABLE_MELT) \
@@ -135,19 +111,10 @@ ifeq ($(CONFIG_DSL_GFAST_DEBUG_FEATURES),y)
 CONFIGURE_ARGS += \
 	--enable-test-suite=yes\
    --enable-dsl-pm-tif=yes
-#	--enable-test-db=yes
-#   --with-dsl-pm-debug-mode=1
 endif
-
 
 EXTRA_CFLAGS = -DINCLUDE_DSL_BOARD_REBOOT -DDSL_BPT_CLI_NUM_ERR_POINTS=64 -D_FORTIFY_SOURCE=2
 EXTRA_LDFLAGS = -z noexecstack -z relro -z now
-
-define Build/Clean
-	@- [ -e $(PKG_BUILD_DIR)/ipkg* ] && rm -Rf $(PKG_BUILD_DIR)/ipkg*
-	@- [ -e $(PKG_BUILD_DIR)/Makefile ] && $(MAKE) -C $(PKG_BUILD_DIR) clean
-	$(call Build/Clean/Default)
-endef
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include/dsl_api_vrx618
@@ -160,7 +127,7 @@ else
 endif
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/dsl-gfast-api-vrx618/install
 	$(INSTALL_DIR) $(1)/$(LTQ_BIN_DIR)
 ifeq ($(CONFIG_DSL_GFAST_LIBRARY_ONLY),y)
 else
@@ -171,8 +138,6 @@ endif
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/config_dms.sh $(1)/etc/init.d
 	$(CP) ./files/opt/lantiq/bin/* $(1)/$(LTQ_BIN_DIR)
-#	ln -snf /tmp $(1)/$(LTQ_BIN_DIR)/memdump
-#	ln -snf /tmp $(1)/$(LTQ_BIN_DIR)/dbgstream
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,dsl-gfast-api-vrx618))

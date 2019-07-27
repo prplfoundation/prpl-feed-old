@@ -1,7 +1,3 @@
-#
-# Openwrt feed Makefile for ltq-gphy-firmware
-#
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ltq_fw_PHY_IP
@@ -12,12 +8,11 @@ PKG_SOURCE_URL:=http://localhost
 
 include $(INCLUDE_DIR)/package.mk
 
-
 define Package/ltq_fw_PHY_IP/Default
   SECTION:=firmware
-  CATEGORY:=Lantiq
+  CATEGORY:=Intel
   URL:=http://www.lantiq.com/
-  MAINTAINER:=Lantiq Beteiligungs GmbH
+  MAINTAINER:=Intel Beteiligungs GmbH
 endef
 
 define Package/ltq-gphy-fw-xrx2xx-a1x-f
@@ -55,9 +50,7 @@ define Package/ltq-gphy-fw-xrx5xx
   TITLE:=GPHY Firmware XRX5xx Gigabit Ethernet
 endef
 
-
-define Build/Compile
-endef
+Build/Compile=
 
 define Package/ltq-gphy-fw-xrx2xx-a1x-f/install
 	$(INSTALL_DIR) $(1)/lib/firmware
@@ -100,7 +93,6 @@ define Package/ltq-gphy-fw-xrx5xx/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/xRx5xx/ltq_fw_PHY11G_IP_1v1_xRx5xx_A21_R8547.bin \
 		$(1)/lib/firmware/ltq_fw_PHY11G_IP_xRx5xx_A21.bin
 endef
-
 
 $(eval $(call BuildPackage,ltq-gphy-fw-xrx2xx-a1x-f))
 $(eval $(call BuildPackage,ltq-gphy-fw-xrx2xx-a1x-g))
